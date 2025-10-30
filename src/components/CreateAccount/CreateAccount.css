@@ -1,0 +1,50 @@
+.create-account {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.launch {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+}
+
+.form-login {
+  border-radius: 30px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  max-width: 500px;
+  width: 90%;
+  padding: 60px 80px;
+}
+
+.form-login .form-control:focus {
+  background-color: white; /* sáng hơn 1 chút khi focus */
+  border-color: rgba(232, 146, 17, 0.8); /* màu viền xanh lam nhạt */
+  box-shadow: 0 0 10px rgba(231, 139, 12, 0.6); /* ánh sáng tỏa ra ngoài */
+  outline: none;
+}
+.launch .form-login .input-group input::placeholder {
+  font-weight: 600;
+}
+
+.form-login .input-group label {
+  padding: 15px;
+  border: none;
+  color: orange;
+}
+
+.input-group input:focus {
+  color: black;
+  font-weight: 500;
+}
+
+.input-group {
+  margin: 10px auto;
+  text-align: center;
+}
+

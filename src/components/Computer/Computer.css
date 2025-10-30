@@ -1,0 +1,102 @@
+.manager-computer {
+  padding: 20px;
+  color: white;
+  border-bottom: 1px solid grey;
+}
+.computer-grid {
+  padding: 20px;
+}
+.computer-grid button {
+  background-color: black;
+  padding: 30px;
+  border: 1px solid grey;
+  margin: 30px;
+  color: orange;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 25px;
+  transition: all 0.5s ease-in-out;
+}
+/* 
+hover */
+.computer-grid button:hover {
+  border: 1px solid orange;
+
+  background-color: white;
+}
+
+/* scroll */
+.table-computer {
+  max-height: 55vh; /* 👈 Chiều cao tối đa, tùy chỉnh theo bố cục */
+  overflow-y: auto; /* 👈 Kích hoạt cuộn dọc */
+  overflow-x: hidden; /* Ẩn cuộn ngang (nếu không cần) */
+  padding-right: 10px; /* tránh thanh cuộn đè nội dung */
+  margin-top: 20px;
+  border-bottom: 1px solid grey;
+}
+/* Tuỳ chọn — làm thanh cuộn đẹp hơn (chỉ có tác dụng trên Chrome, Edge) */
+.table-computer::-webkit-scrollbar {
+  width: 8px;
+}
+
+.table-computer::-webkit-scrollbar-thumb {
+  background-color: grey;
+  border-radius: 10px;
+}
+
+.table-computer::-webkit-scrollbar-thumb:hover {
+  background-color: grey;
+}
+
+.computer-info {
+  background-color: black;
+  color: white;
+}
+
+.computer-details {
+  border-top: 1px solid grey;
+  padding: 20px;
+}
+
+/* .display-computer-details {
+  border: 1px solid grey;
+}
+
+.display-computer-details {
+  color: white;
+}
+
+.display-computer-details span{
+    padding: 10px;
+    background-color: white;
+} */
+
+.table-computer {
+  width: 100%; /* luôn chiếm toàn bộ chiều rộng */
+  display: flex;
+  justify-content: center;
+}
+
+.computer-grid {
+  width: 100%; /* đảm bảo các nút máy tính co giãn full container */
+  display: flex;
+  flex-wrap: wrap; /* để tự xuống dòng khi nhỏ màn hình */
+  justify-content: center;
+ 
+}
+
+.computer-title {
+  flex: 1 1 200px; /* mỗi ô chiếm tối thiểu 200px và co giãn linh hoạt */
+  max-width: 300px; /* tránh quá to trên màn hình lớn */
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  background: #fff;
+  padding: 15px;
+  margin: 5px;
+  transition: all 0.3s ease;
+}
+
+.computer-title:hover {
+  background-color: #f7f7f7;
+  transform: scale(1.03);
+}
