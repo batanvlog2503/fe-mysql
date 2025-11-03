@@ -6,16 +6,33 @@
 .computer-grid {
   padding: 20px;
 }
-.computer-grid button {
-  background-color: black;
-  padding: 30px;
+
+.computer-grid .Using {
+  padding: 25px; /* hoặc giá trị bạn muốn */
   border: 1px solid grey;
-  margin: 30px;
-  color: orange;
+  margin: 15px;
   font-size: 18px;
   font-weight: 600;
   border-radius: 25px;
   transition: all 0.5s ease-in-out;
+  width: 180px; /* 👈 Thêm chiều rộng cố định */
+  text-align: center;
+  box-sizing: border-box; /* 👈 Đảm bảo border và padding không làm to khối */
+}
+
+.computer-grid .Offline{
+  padding: 25px; /* hoặc giá trị bạn muốn */
+  border: 1px solid grey;
+  margin: 15px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 25px;
+  transition: all 0.5s ease-in-out;
+  width: 180px; /* 👈 Thêm chiều rộng cố định */
+  text-align: center;
+  box-sizing: border-box; 
+  color: orange;
+  background-color: black;
 }
 /* 
 hover */
@@ -99,4 +116,9 @@ hover */
 .computer-title:hover {
   background-color: #f7f7f7;
   transform: scale(1.03);
+}
+.computer-grid {
+  display: flex;
+  flex-wrap: wrap;
+  /* hoặc margin */
 }

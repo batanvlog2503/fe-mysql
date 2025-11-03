@@ -1,0 +1,63 @@
+.computer-product .product-details {
+  padding: 10x;
+  border: 1px solid grey;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.product-img {
+  width: 100%;
+  height: auto;
+}
+img {
+  width: 50%;
+}
+
+.product-update {
+  margin: 10px;
+  width: 100%;
+  
+}
+.product-update .btn-danger {
+  font-size: 30px;
+}
+
+
+.inner-wrap-computer-product .row{
+  border: 1px solid grey;
+}
+
+.computer-product .row{
+  width: 100%;
+  margin: 0 auto;
+  background-color: black;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Khung chứa danh sách sản phẩm có thể cuộn */
+.inner-wrap-computer-product .row{
+  max-height: 700px; /* Chiều cao tối đa khung cuộn */
+  overflow-y: auto;  /* Bật cuộn dọc */
+  padding-right: 10px; /* Tránh che chữ bởi scrollbar */
+}
+
+/* Thanh cuộn đẹp (chỉ Chrome, Edge, Safari) */
+.inner-wrap-computer-product .row::-webkit-scrollbar {
+  width: 8px;
+}
+
+.inner-wrap-computer-product .row::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.inner-wrap-computer-product .row::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.inner-wrap-computer-product.row::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
