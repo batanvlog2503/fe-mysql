@@ -5,6 +5,7 @@ import ProductDetails from "../ProductDetails/ProductDetails"
 const Service = () => {
   const location = useLocation()
   const { loginInfo } = location.state || {}
+  const {services} = location.state || {}
  
 
   return(
@@ -16,7 +17,7 @@ const Service = () => {
                     <Product customer = {loginInfo}></Product>
                 </div>
                 <div className="col-xl-4 col-lg-4 col-sm-12 col-12 product-details">
-                    <ProductDetails customer = {loginInfo}></ProductDetails>
+                    <ProductDetails customer = {loginInfo} service = {services}></ProductDetails>
                 </div>
             </div>
         </div>

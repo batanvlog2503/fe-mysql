@@ -10,6 +10,7 @@ const ComputerDetails = ({ computer }) => {
   const [computerStatus, setComputerStatus] = useState(
     computer?.status || "Offline"
   )
+  const [services, setServices] = useState(null)
   const [loginInfo, setLoginInfo] = useState({
     username: "",
     password: "",
@@ -63,6 +64,7 @@ const ComputerDetails = ({ computer }) => {
             setIsLoggedIn(true)
             setComputerStatus(sessionData.computerStatus || computer.status)
             setSession(sessionData.session)
+            setServices(sessionData.service)
           }
         } catch (error) {
           console.error("Error parsing saved session:", error)
@@ -125,7 +127,19 @@ const ComputerDetails = ({ computer }) => {
           }
         )
         const startTime = new Date().toISOString()
+        let newService = null
+        try {
+          const serviceResponse = await axios.post(
+            "http://localhost:8080/api/services",
+            { customerId: foundUser.id }
+          )
 
+          newService = serviceResponse.data
+          console.log("Service created:", newService)
+        } catch (error) {
+          console.log(error)
+          alert("Post Service failed")
+        }
         // TẠO SESSION NGAY TẠI ĐÂY
         const sessionResponse = await axios.post(
           "http://localhost:8080/api/sessions",
@@ -153,6 +167,9 @@ const ComputerDetails = ({ computer }) => {
               computerId: computerId,
               customerId: foundUser.id,
             },
+            service: {
+              customerId: foundUser.id,
+            },
           })
         )
 
@@ -166,6 +183,8 @@ const ComputerDetails = ({ computer }) => {
           computerId: computerId,
           customerId: foundUser.id,
         })
+
+        setServices(newService)
         alert("Đăng nhập thành công")
         handleCloseLogin()
       } else {
@@ -343,7 +362,9 @@ const ComputerDetails = ({ computer }) => {
                       <button
                         className="btn btn-primary"
                         onClick={() =>
-                          navigate("/service", { state: { loginInfo } })
+                          navigate("/service", {
+                            state: { loginInfo, services },
+                          })
                         }
                       >
                         Dịch Vụ
