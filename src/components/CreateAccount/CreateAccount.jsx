@@ -26,7 +26,7 @@ const CreateAccount = () => {
         balance: customers.balance ? parseInt(customers.balance) : 0,
       }
       await axios.post("http://localhost:8080/api/customers", customerData)
-
+      
       setCustomers({
         username: "",
         password: "",

@@ -6,7 +6,7 @@ const Service = () => {
   const location = useLocation()
   const { loginInfo } = location.state || {}
   const {services} = location.state || {}
- 
+    const {session} = location.state || {}
 
   return(
     <div className="container computer-service">
@@ -14,10 +14,10 @@ const Service = () => {
             <div className="row">
                 <div className="col-12 text-center" style={{height:"10vh"}}><h1>Menu</h1></div>
                 <div className="col-xl-8 col-lg-8 col-sm-12 col-12 product">
-                    <Product customer = {loginInfo}></Product>
+                    <Product customer = {loginInfo} service = {services}></Product>
                 </div>
                 <div className="col-xl-4 col-lg-4 col-sm-12 col-12 product-details">
-                    <ProductDetails customer = {loginInfo} service = {services}></ProductDetails>
+                    <ProductDetails customer = {loginInfo} service = {services} session = {session}></ProductDetails>
                 </div>
             </div>
         </div>

@@ -96,6 +96,107 @@ const ComputerDetails = ({ computer }) => {
     setLoginFormData({ ...loginFormData, [e.target.name]: e.target.value })
   }
 
+  // const handleLoginSubmit = async (e) => {
+  //   e.preventDefault()
+
+  //   if (!computer || !computer.computerId) {
+  //     alert("Không tìm thấy thông tin máy tính")
+  //     return
+  //   }
+
+  //   try {
+  //     const result = await axios.get("http://localhost:8080/api/customers", {
+  //       validateStatus: () => true,
+  //     })
+
+  //     const data = result.data
+  //     const { username, password } = loginFormData
+  //     const foundUser = data.find(
+  //       (u) => u.username === username && u.password === password
+  //     )
+
+  //     if (foundUser) {
+  //       const computerId = computer.computerId
+
+  //       // Cập nhật trạng thái máy
+  //       await axios.put(
+  //         `http://localhost:8080/api/computers/update/${computerId}`,
+  //         {
+  //           ...computer,
+  //           status: "Using",
+  //         }
+  //       )
+  //       const startTime = new Date().toISOString()
+  //       let newService = null
+  //       try {
+  //         const serviceResponse = await axios.post(
+  //           "http://localhost:8080/api/services",
+  //           { customerId: foundUser.id, sessionId: newSession.id  }
+  //         )
+
+  //         newService = serviceResponse.data
+  //         setServices(newService)
+  //         console.log("Service created:", newService)
+  //         alert("Post Service Succesfully")
+  //       } catch (error) {
+  //         console.log(error)
+  //         alert("Post Service failed")
+  //       }
+  //       // TẠO SESSION NGAY TẠI ĐÂY
+  //       const sessionResponse = await axios.post(
+  //         "http://localhost:8080/api/sessions",
+  //         {
+  //           computerId: computerId,
+  //           customerId: foundUser.id,
+  //           startTime: startTime,
+  //           endTime: null,
+  //           total: 0,
+  //         }
+  //       )
+
+  //       const newSession = sessionResponse.data // có sessionId
+
+  //       // Lưu vào localStorage
+  //       localStorage.setItem(
+  //         `computer_${computerId}_session`,
+  //         JSON.stringify({
+  //           loginInfo: foundUser,
+  //           isLoggedIn: true,
+  //           computerStatus: "Using",
+  //           session: {
+  //             sessionId: newSession.id,
+  //             startTime: startTime,
+  //             computerId: computerId,
+  //             customerId: foundUser.id,
+  //           },
+  //           service: {
+  //             customerId: foundUser.id,
+  //           },
+  //         })
+  //       )
+
+  //       // Cập nhật state
+  //       setLoginInfo(foundUser)
+  //       setIsLoggedIn(true)
+  //       setComputerStatus("Using")
+  //       setSession({
+  //         sessionId: newSession.id,
+  //         startTime: startTime,
+  //         computerId: computerId,
+  //         customerId: foundUser.id,
+  //       })
+
+  //       setServices(newService)
+  //       alert("Đăng nhập thành công")
+  //       handleCloseLogin()
+  //     } else {
+  //       alert("Sai tên đăng nhập hoặc mật khẩu")
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during login:", error)
+  //     alert("Lỗi khi đăng nhập: " + error.message)
+  //   }
+  // }
   const handleLoginSubmit = async (e) => {
     e.preventDefault()
 
@@ -126,21 +227,10 @@ const ComputerDetails = ({ computer }) => {
             status: "Using",
           }
         )
-        const startTime = new Date().toISOString()
-        let newService = null
-        try {
-          const serviceResponse = await axios.post(
-            "http://localhost:8080/api/services",
-            { customerId: foundUser.id }
-          )
 
-          newService = serviceResponse.data
-          console.log("Service created:", newService)
-        } catch (error) {
-          console.log(error)
-          alert("Post Service failed")
-        }
-        // TẠO SESSION NGAY TẠI ĐÂY
+        const startTime = new Date().toISOString()
+
+        // BƯỚC 1: TẠO SESSION TRƯỚC
         const sessionResponse = await axios.post(
           "http://localhost:8080/api/sessions",
           {
@@ -152,7 +242,38 @@ const ComputerDetails = ({ computer }) => {
           }
         )
 
-        const newSession = sessionResponse.data // có sessionId
+        const newSession = sessionResponse.data // { id: 1, ... }
+        console.log("Session created:", newSession)
+
+        // BƯỚC 2: TẠO SERVICE VỚI SESSION_ID
+        let newService = null
+        try {
+          const serviceResponse = await axios.post(
+            "http://localhost:8080/api/services",
+            {
+              customerId: foundUser.id,
+              sessionId: newSession.sessionId || newSession.id, //  THÊM SESSION_ID VÀO ĐÂY
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          console.log("Session API response:", newSession)
+
+          newService = serviceResponse.data // { serviceId: 5, customerId: 1, sessionId: 1 }
+          setSession(newSession)
+          setServices(newService)
+          console.log("Service created:", newService)
+          alert("Post Service Successfully")
+        } catch (error) {
+          console.error("Post Service error:", error)
+          console.error("Error response:", error.response?.data)
+          alert(
+            "Post Service failed: " + (error.response?.data || error.message)
+          )
+        }
 
         // Lưu vào localStorage
         localStorage.setItem(
@@ -168,7 +289,9 @@ const ComputerDetails = ({ computer }) => {
               customerId: foundUser.id,
             },
             service: {
-              customerId: foundUser.id,
+              serviceId: newService?.serviceId, //  Lưu serviceId
+              customerId: newService?.customerId,
+              sessionId: newService?.sessionId, //  Lưu sessionId
             },
           })
         )
@@ -177,12 +300,7 @@ const ComputerDetails = ({ computer }) => {
         setLoginInfo(foundUser)
         setIsLoggedIn(true)
         setComputerStatus("Using")
-        setSession({
-          sessionId: newSession.id,
-          startTime: startTime,
-          computerId: computerId,
-          customerId: foundUser.id,
-        })
+        setSession(newSession)
 
         setServices(newService)
         alert("Đăng nhập thành công")
@@ -195,7 +313,6 @@ const ComputerDetails = ({ computer }) => {
       alert("Lỗi khi đăng nhập: " + error.message)
     }
   }
-
   const handleShutDownChange = async () => {
     if (!computer) return
 
@@ -357,17 +474,23 @@ const ComputerDetails = ({ computer }) => {
                         className="btn btn-danger"
                         onClick={handleShutDownChange}
                       >
-                        Tắt máy
+                        Tắt máy {session.sessionid};
                       </button>
                       <button
                         className="btn btn-primary"
                         onClick={() =>
                           navigate("/service", {
-                            state: { loginInfo, services },
+                            state: { loginInfo, services, session },
                           })
                         }
                       >
                         Dịch Vụ
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-success"
+                      >
+                        Success
                       </button>
                     </div>
                   )}
