@@ -10,7 +10,7 @@
 }
 
 .content-area {
-  background-color: black;
+  background-color: white;
   height: 100vh;
   overflow-y: auto; /* Cho phép cuộn nội dung trang */
   padding: 20px;

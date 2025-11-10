@@ -30,17 +30,21 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
+          <Link to="/list-computer">
+            <i className="fa-solid fa-computer"></i> Máy trạm
+          </Link>
+        </li>
+        <li>
           <Link to="/write">
             <i className="fa-solid fa-credit-card"></i> Hóa đơn
           </Link>
         </li>
         <li>
           <Link to="/createaccount">
-            <i className="fa-solid fa-pen"></i> Tạo Tài Khoản
+            <i className="fa-solid fa-pen"></i> Tạo
           </Link>
         </li>
 
-        <li></li>
         <li></li>
       </ul>
 

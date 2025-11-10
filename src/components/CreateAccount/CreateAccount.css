@@ -4,6 +4,7 @@
   align-items: center;
   flex-direction: column;
   justify-content: center;
+  padding: 10px;
 }
 
 .launch {
@@ -16,10 +17,11 @@
 
 .form-login {
   border-radius: 30px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
   max-width: 500px;
-  width: 90%;
+  width: 100%;
   padding: 60px 80px;
+  border: 1px solid grey;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .form-login .form-control:focus {
@@ -35,7 +37,7 @@
 .form-login .input-group label {
   padding: 15px;
   border: none;
-  color: orange;
+  color: black;
 }
 
 .input-group input:focus {
@@ -47,4 +49,3 @@
   margin: 10px auto;
   text-align: center;
 }
-

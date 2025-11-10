@@ -1,7 +1,10 @@
 .computer-service{
-    color: white;
+    color: black;
 }
 
 .inner-wrap-computer-login{
     margin-top: 30px;
+}
+.actions.logged-in button{
+    margin: 10px;
 }

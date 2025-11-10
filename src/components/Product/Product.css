@@ -30,7 +30,7 @@ img {
 .computer-product .row{
   width: 100%;
   margin: 0 auto;
-  background-color: black;
+  background-color: white;
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -38,7 +38,7 @@ img {
 
 /* Khung chứa danh sách sản phẩm có thể cuộn */
 .inner-wrap-computer-product .row{
-  max-height: 700px; /* Chiều cao tối đa khung cuộn */
+  max-height: 100%; /* Chiều cao tối đa khung cuộn */
   overflow-y: auto;  /* Bật cuộn dọc */
   padding-right: 10px; /* Tránh che chữ bởi scrollbar */
 }

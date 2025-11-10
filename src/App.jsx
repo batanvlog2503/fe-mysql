@@ -17,6 +17,7 @@ import MainLayout from "./components/MainLayout"
 import ComputerLayout from "./components/Computer/ComputerLayout"
 import CreateAccount from "./components/CreateAccount/CreateAccount"
 import Service from "./components/Service/Service"
+import ListComputer from "./components/ListComputer/ListComputer"
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -35,6 +36,10 @@ function App() {
         <Route
           path="service"
           element={<Service />}
+        ></Route>
+        <Route
+          path="list-computer"
+          element={<ListComputer />}
         ></Route>
       </Route>
     )

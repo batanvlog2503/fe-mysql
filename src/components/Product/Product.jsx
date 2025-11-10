@@ -42,19 +42,14 @@ const Product = ({ customer, service }) => {
         alert("Vui lòng nhập số lượng hợp lệ")
         return
       }
-
-     // Lưu vào bảng service_product
+      console.log("service", service)
+      console.log("Product", product)
+      // Lưu vào bảng service_product
       await axios.post("http://localhost:8080/api/serviceproducts", {
         service: service,
         product: product,
         quantity: quantity,
       })
-
-      // await axios.post("http://localhost:8080/api/serviceproducts/post", {
-      //   service: service,
-      //   productId: product,
-      //   quantity: quantity,
-      // })
       console.log("Service" + service)
       // Reset input
       setQuantities((prev) => ({
@@ -63,6 +58,7 @@ const Product = ({ customer, service }) => {
       }))
 
       alert("Đặt hàng thành công!")
+      window.location.reload()
     } catch (error) {
       console.error("Save failed", error)
       alert("Failed to save Product. Please try again.")
@@ -73,9 +69,9 @@ const Product = ({ customer, service }) => {
     <div className="container computer-product">
       <div className="inner-wrap-computer-product">
         <div className="row">
-          <div className="product-update">
+          {/* <div className="product-update">
             <button className="btn btn-danger update">Update</button>
-          </div>
+          </div> */}
           {products.map((product, index) => (
             <div
               className="col-xl-6 col-lg-6 col-sm-12 col-12 product-details"

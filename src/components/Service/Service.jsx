@@ -25,4 +25,5 @@ const Service = () => {
   )
 }
 
+// {customers, services, sessions}
 export default Service

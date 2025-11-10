@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react"
-import axios from "axios"
 
-const Session = ({ computerSelected, customerSelected }) => {
-  const [session, setSession] = useState(null)
+const Session = ({ computerSelected, customerSelected, session }) => {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [elapsedTime, setElapsedTime] = useState("00:00:00")
 
@@ -17,11 +15,23 @@ const Session = ({ computerSelected, customerSelected }) => {
 
   // Tính toán thời gian đã sử dụng
   useEffect(() => {
-    /// setTime Ecalpes
     if (session?.startTime) {
-      const start = new Date(session.startTime)
+      // Parse startTime từ ISO string và TRỪ ĐI 7 giờ để đúng với thời gian thực
+      // Vì new Date() sẽ tự động cộng 7h khi parse ISO string
+      const startDate = new Date(session.startTime)
+
+      // Tạo thời gian bắt đầu đúng bằng cách trừ đi offset timezone
+      const timezoneOffset = 7 * 60 * 60 * 1000 // 7 giờ tính bằng milliseconds
+      const adjustedStart = new Date(startDate.getTime() - timezoneOffset)
+
       const now = currentTime
-      const diff = Math.floor((now - start) / 1000)
+      const diff = Math.floor((now - adjustedStart) / 1000)
+
+      // Xử lý trường hợp số âm
+      if (diff < 0) {
+        setElapsedTime("00:00:00")
+        return
+      }
 
       const hours = Math.floor(diff / 3600)
       const minutes = Math.floor((diff % 3600) / 60)
@@ -36,83 +46,18 @@ const Session = ({ computerSelected, customerSelected }) => {
     }
   }, [currentTime, session?.startTime])
 
-  // Load hoặc tạo session
-  useEffect(() => {
-    if (!computerSelected || !customerSelected) {
-      setSession(null)
-      return
-    }
+  // Format thời gian - KHÔNG convert timezone, giữ nguyên giá trị
+  const formatDateTime = (isoString) => {
+    if (!isoString) return "N/A"
 
-    const storageKey = `computer_${computerSelected.computerId}_session`
+    // Parse trực tiếp từ ISO string mà KHÔNG convert timezone
+    // "2025-11-10T09:19:54.181" -> "10/11/2025 09:19:54"
+    const [datePart, timePart] = isoString.split("T")
+    const [year, month, day] = datePart.split("-")
+    const [time] = timePart.split(".")
+    const [hours, minutes, seconds] = time.split(":")
 
-    // 1. Kiểm tra localStorage trước
-    const savedData = localStorage.getItem(storageKey)
-
-    if (savedData) {
-      try {
-        const parsedData = JSON.parse(savedData)
-
-        // Kiểm tra xem có session không
-        if (parsedData.session?.startTime) {
-          setSession(parsedData.session)
-          return // Dừng lại, không tạo session mới
-        }
-      } catch (error) {
-        console.error("Error parsing localStorage:", error)
-      }
-    }
-
-    // 2. Nếu không có session trong localStorage, tạo mới
-    const createSession = async () => {
-      try {
-        const newSession = {
-          customerId: customerSelected.id,
-          computerId: computerSelected.computerId,
-          startTime: new Date().toISOString(),
-          endTime: null,
-          total: 0,
-        }
-
-        console.log("Tạo session mới:", newSession)
-
-        // Post lên server
-        const response = await axios.post(
-          "http://localhost:8080/api/sessions",
-          newSession,
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-
-        // Lấy session từ response (có thể có sessionId)
-        const createdSession = response.data || newSession
-
-        // Cập nhật state
-        setSession(createdSession)
-
-        // Lưu vào localStorage (cập nhật hoặc tạo mới)
-        const existingData = savedData ? JSON.parse(savedData) : {}
-        const updatedData = {
-          ...existingData,
-          session: createdSession, // Thêm/cập nhật session
-        }
-        // cập nhật localStorage
-
-        localStorage.setItem(storageKey, JSON.stringify(updatedData))
-        console.log("Đã lưu session vào localStorage:", updatedData)
-      } catch (error) {
-        console.error("Lỗi tạo session:", error)
-      }
-    }
-
-    createSession()
-  }, [computerSelected?.computerId, customerSelected?.id])
-
-  // Format thời gian
-  const formatDateTime = (dateTime) => {
-    if (!dateTime) return "N/A"
-    const local = new Date(dateTime)
-    return local.toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" })
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`
   }
 
   if (!computerSelected || !customerSelected) {
@@ -125,17 +70,17 @@ const Session = ({ computerSelected, customerSelected }) => {
         padding: "15px",
         border: "1px solid #ccc",
         borderRadius: "8px",
-        backgroundColor: "black",
+        backgroundColor: "White",
         marginTop: "15px",
       }}
     >
-      <h4 style={{ marginBottom: "10px", color: "#333" }}>Thông tin Session</h4>
+      <h4 style={{ marginBottom: "10px", color: "Black" }}>Thông tin Session</h4>
 
-      <div style={{ marginBottom: "8px" }}>
+      <div style={{ marginBottom: "8px", color: "Black" }}>
         <b>Máy:</b> {computerSelected.computerId}
       </div>
 
-      <div style={{ marginBottom: "8px" }}>
+      <div style={{ marginBottom: "8px", color: "Black" }}>
         <b>Khách hàng:</b> {customerSelected.username} (ID:{" "}
         {customerSelected.id})
       </div>
@@ -143,16 +88,16 @@ const Session = ({ computerSelected, customerSelected }) => {
       {session ? (
         <>
           {session.sessionId && (
-            <div style={{ marginBottom: "8px" }}>
+            <div style={{ marginBottom: "8px", color: "Black" }}>
               <b>Session ID:</b> {session.sessionId}
             </div>
           )}
 
-          <div style={{ marginBottom: "8px" }}>
+          <div style={{ marginBottom: "8px", color: "Black" }}>
             <b>Bắt đầu:</b> {formatDateTime(session.startTime)}
           </div>
 
-          <div style={{ marginBottom: "8px" }}>
+          <div style={{ marginBottom: "8px", color: "Black" }}>
             <b>Thời gian hiện tại:</b> {currentTime.toLocaleString("vi-VN")}
           </div>
 

@@ -50,7 +50,7 @@ const CreateAccount = () => {
             <h1
               style={{
                 fontSize: "50px",
-                color: "Orange",
+                color: "Black",
                 fontWeight: "600",
                 padding: "20px",
               }}
