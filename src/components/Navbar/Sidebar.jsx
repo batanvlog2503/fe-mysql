@@ -25,8 +25,8 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
-          <Link to="/view-blogs">
-            <i className="fa-solid fa-newspaper"></i> Đồ ăn
+          <Link to="/deposit-money">
+            <i className="fa-solid fa-newspaper"></i> Nạp Tiền
           </Link>
         </li>
         <li>

@@ -7,7 +7,7 @@ const Service = () => {
   const { loginInfo } = location.state || {}
   const {services} = location.state || {}
     const {session} = location.state || {}
-
+  const {computer} = location.state || {}
   return(
     <div className="container computer-service">
         <div className="inner-wrap-computer-service">
@@ -17,7 +17,7 @@ const Service = () => {
                     <Product customer = {loginInfo} service = {services}></Product>
                 </div>
                 <div className="col-xl-4 col-lg-4 col-sm-12 col-12 product-details">
-                    <ProductDetails customer = {loginInfo} service = {services} session = {session}></ProductDetails>
+                    <ProductDetails customer = {loginInfo} service = {services} session = {session} computer = {computer}></ProductDetails>
                 </div>
             </div>
         </div>

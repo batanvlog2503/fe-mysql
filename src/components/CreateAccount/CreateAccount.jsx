@@ -47,16 +47,16 @@ const CreateAccount = () => {
       <div className="inner-wrap-create-account launch">
         <div className="form-login">
           <div className="title-login text-center">
-            <h1
+            <h4
               style={{
-                fontSize: "50px",
+                fontSize: "40px",
                 color: "Black",
                 fontWeight: "600",
                 padding: "20px",
               }}
             >
-              Sign Up
-            </h1>
+              Tạo Tài Khoản
+            </h4>
           </div>
 
           <form

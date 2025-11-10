@@ -4,7 +4,7 @@ import viteLogo from "/vite.svg"
 import "./App.css"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap/dist/js/bootstrap.bundle.min.js"
-
+import DepositMoney from "./components/DepositMoney/DepositMoney"
 import {
   Route,
   Router,
@@ -18,6 +18,7 @@ import ComputerLayout from "./components/Computer/ComputerLayout"
 import CreateAccount from "./components/CreateAccount/CreateAccount"
 import Service from "./components/Service/Service"
 import ListComputer from "./components/ListComputer/ListComputer"
+
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -41,6 +42,7 @@ function App() {
           path="list-computer"
           element={<ListComputer />}
         ></Route>
+        <Route path = "deposit-money" element = {<DepositMoney/>}></Route>
       </Route>
     )
   )

@@ -3,7 +3,7 @@ import "./ProductDetails.css"
 import { useState, useEffect } from "react"
 import axios from "axios"
 
-const ProductDetails = ({ customer, service , session}) => {
+const ProductDetails = ({ customer, service, session, computer }) => {
   const [orderedProducts, setOrderedProducts] = useState([]) // ĐỔI TỪ {} SANG []
 
   useEffect(() => {
@@ -49,13 +49,14 @@ const ProductDetails = ({ customer, service , session}) => {
     <div className="container product-details">
       <div className="inner-wrap-product-details">
         <div className="title text-center">
-          <h2 style={{ color: "Black" }}>Thông Tin Đơn Hàng</h2>
+          <h2 style={{ color: "black" }}>Thông Tin Đơn Hàng</h2>
         </div>
         <div className="title-customer">
           <h4>Id Customer: {customer.id}</h4>
           <h4>Xin chào : {customer.username}</h4>
           <h4>Service : {service.serviceId}</h4>
           <h4>Session : {session.sessionId}</h4>
+          <h4>Computer: {computer.computerId}</h4>
         </div>
         <div className="row text-center">
           <table className="table table-bordered table-hover">

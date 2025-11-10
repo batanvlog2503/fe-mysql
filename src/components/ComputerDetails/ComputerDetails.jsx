@@ -326,7 +326,7 @@ const ComputerDetails = ({ computer }) => {
       if (currentSession.sessionId) {
         console.log("Updating session:", currentSession.sessionId)
         try {
-          await axios.put(
+          const response = await axios.put(
             `http://localhost:8080/api/sessions/update/${currentSession.sessionId}`,
             {
               ...currentSession,
@@ -334,6 +334,8 @@ const ComputerDetails = ({ computer }) => {
               total: totalCost,
             }
           )
+
+          console.log("Session Update data", response)
           console.log("Session updated successfully")
         } catch (error) {
           console.error("Error updating session:", error)
@@ -353,6 +355,7 @@ const ComputerDetails = ({ computer }) => {
       )
 
       // Xóa localStorage và reset state
+
       localStorage.removeItem(storageKey)
       setComputerStatus("Offline")
       setIsLoggedIn(false)
@@ -371,6 +374,7 @@ const ComputerDetails = ({ computer }) => {
           `Tiền: ${totalCost.toLocaleString("vi-VN")} VND\n` +
           `Số dư còn lại: ${newBalance.toLocaleString("vi-VN")} VND`
       )
+      // window.location.reload()
     } catch (error) {
       console.error("Error shutting down computer:", error)
       alert("Có lỗi khi tắt máy: " + error.message)
@@ -378,7 +382,10 @@ const ComputerDetails = ({ computer }) => {
   }
 
   return (
-    <div className="container computer-service">
+    <div
+      className="container computer-service"
+      style={{ marginBottom: "30px" }}
+    >
       <div className="inner-wrap-computer-service">
         {computer ? (
           <>
@@ -436,12 +443,13 @@ const ComputerDetails = ({ computer }) => {
                         className="btn btn-primary service"
                         onClick={() =>
                           navigate("/service", {
-                            state: { loginInfo, services, session },
+                            state: { loginInfo, services, session, computer },
                           })
                         }
                       >
                         Dịch Vụ
                       </button>
+                    
                       <button
                         type="button"
                         className="btn btn-success"

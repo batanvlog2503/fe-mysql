@@ -1,5 +1,12 @@
-.inner-wrap-product-details .title {
-  background-color: white;
+.display-products h2{
   color: black;
+}
+
+.product-details {
+  position: sticky;
+  top: 0; /* khoảng cách từ viền trên */
+  z-index: 1000; /* đảm bảo nổi lên trên */
+  background-color: #fff; /* để không bị trong suốt */
   padding: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }

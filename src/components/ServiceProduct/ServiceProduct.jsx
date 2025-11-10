@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import axios from "axios"
-
+import "./ServiceProduct.css"
 const ServiceProduct = ({
   computerSelected,
   customerSelected,
@@ -64,10 +64,10 @@ const ServiceProduct = ({
   }
 
   return (
-    <div className="container product-details">
-      <div className="inner-wrap-product-details">
+    <div className="container display-products">
+      <div className="inner-wrap-display-products">
         <div className="title text-center">
-          <h2 style={{ color: "white" }}>Thông Tin Đơn Hàng</h2>
+          <h2 style={{ color: "black" }}>Thông Tin Đơn Hàng</h2>
         </div>
 
         <div className="title-customer">
