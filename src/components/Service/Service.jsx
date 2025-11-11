@@ -13,10 +13,10 @@ const Service = () => {
         <div className="inner-wrap-computer-service">
             <div className="row">
                 <div className="col-12 text-center" style={{height:"10vh"}}><h1>Menu</h1></div>
-                <div className="col-xl-8 col-lg-8 col-sm-12 col-12 product">
+                <div className="col-xl-6 col-lg-6 col-sm-12 col-12 product">
                     <Product customer = {loginInfo} service = {services}></Product>
                 </div>
-                <div className="col-xl-4 col-lg-4 col-sm-12 col-12 product-details">
+                <div className="col-xl-6 col-lg-6 col-sm-12 col-12 product-details">
                     <ProductDetails customer = {loginInfo} service = {services} session = {session} computer = {computer}></ProductDetails>
                 </div>
             </div>

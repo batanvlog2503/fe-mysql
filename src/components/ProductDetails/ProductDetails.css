@@ -1,8 +1,9 @@
-.display-products h2{
+.display-products h2 {
   color: black;
 }
 
 .product-details {
+  
   position: sticky;
   top: 0; /* khoảng cách từ viền trên */
   z-index: 1000; /* đảm bảo nổi lên trên */

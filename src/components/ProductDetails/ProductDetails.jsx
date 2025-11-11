@@ -2,7 +2,7 @@ import React from "react"
 import "./ProductDetails.css"
 import { useState, useEffect } from "react"
 import axios from "axios"
-
+import { FaTrashAlt, FaEdit } from "react-icons/fa"
 const ProductDetails = ({ customer, service, session, computer }) => {
   const [orderedProducts, setOrderedProducts] = useState([]) // ĐỔI TỪ {} SANG []
 
@@ -37,6 +37,23 @@ const ProductDetails = ({ customer, service, session, computer }) => {
     }
   }
 
+  const handleDeleteProduct = async (productId, sessionId) => {
+    try {
+      await axios.delete(
+        `http://localhost:8080/api/serviceproducts?sessionId=${sessionId}&productId=${productId}`,
+        {
+          validateStatus: () => {
+            return true
+          },
+        }
+      )
+      console.log("Delete Product Successfully")
+      loadOrderedProducts()
+    } catch (error) {
+      console.log(error)
+      alert("Delete Product Failed")
+    }
+  }
   // Tính tổng tiền
   const totalPrice = Array.isArray(orderedProducts)
     ? orderedProducts.reduce(
@@ -68,6 +85,7 @@ const ProductDetails = ({ customer, service, session, computer }) => {
                 <th>Quantity</th>
                 <th>Price</th>
                 <th>Total</th>
+                <th>Xóa</th>
               </tr>
             </thead>
             <tbody className="text-center">
@@ -80,6 +98,16 @@ const ProductDetails = ({ customer, service, session, computer }) => {
                     <td>{item.quantity}</td>
                     <td>{item.price.toLocaleString()}₫</td>
                     <td>{(item.price * item.quantity).toLocaleString()}₫</td>
+                    <td>
+                      <button
+                        className="btn btn-danger delete-product"
+                        onClick={() =>
+                          handleDeleteProduct(item.productId, session.sessionId)
+                        }
+                      >
+                        <FaTrashAlt />
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
