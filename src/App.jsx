@@ -18,7 +18,7 @@ import ComputerLayout from "./components/Computer/ComputerLayout"
 import CreateAccount from "./components/CreateAccount/CreateAccount"
 import Service from "./components/Service/Service"
 import ListComputer from "./components/ListComputer/ListComputer"
-
+import ListCustomer from "./components/ListCustomer/ListCustomer"
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -42,7 +42,14 @@ function App() {
           path="list-computer"
           element={<ListComputer />}
         ></Route>
-        <Route path = "deposit-money" element = {<DepositMoney/>}></Route>
+        <Route
+          path="deposit-money"
+          element={<DepositMoney />}
+        ></Route>
+        <Route
+          path="list-customer"
+          element={<ListCustomer />}
+        ></Route>
       </Route>
     )
   )

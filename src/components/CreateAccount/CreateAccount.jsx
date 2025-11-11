@@ -128,7 +128,7 @@ const CreateAccount = () => {
                 aria-describedby="basic-addon1"
                 value={balance}
                 onChange={(e) => handleInputChange(e)}
-                step="1000" // mỗi lần tăng giảm là 1000
+                step="1" // mỗi lần tăng giảm là 1000
                 min="0" // không cho nhập số âm
               />
             </div>

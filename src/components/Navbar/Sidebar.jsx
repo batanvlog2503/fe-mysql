@@ -45,7 +45,11 @@ const Sidebar = () => {
           </Link>
         </li>
 
-        <li></li>
+        <li>
+          <Link to="/list-customer">
+            <i className  ="fa-solid fa-circle-user"></i> Tài khoản
+          </Link>
+        </li>
       </ul>
 
       <div className="sidebar-footer">

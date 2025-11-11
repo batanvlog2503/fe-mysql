@@ -449,7 +449,17 @@ const ComputerDetails = ({ computer }) => {
                       >
                         Dịch Vụ
                       </button>
-                    
+                        
+                       <button
+                        className="btn btn-secondary service"
+                        onClick={() =>
+                          navigate("/service", {
+                            state: { loginInfo, services, session, computer },
+                          })
+                        }
+                      >
+                        Thanh Toán
+                      </button>
                       <button
                         type="button"
                         className="btn btn-success"
