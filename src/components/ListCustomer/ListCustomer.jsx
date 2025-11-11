@@ -2,6 +2,8 @@ import React from "react"
 import "./ListCustomer.css"
 import axios from "axios"
 import { useState, useEffect } from "react"
+import { FaTrashAlt, FaEdit } from "react-icons/fa"
+import { useNavigate } from "react-router-dom"
 const ListCustomer = () => {
   const [customers, setCustomers] = useState([])
 
@@ -9,6 +11,7 @@ const ListCustomer = () => {
     loadCustomers()
   }, [])
 
+  const navigate = useNavigate()
   const loadCustomers = async () => {
     try {
       const result = await axios.get("http://localhost:8080/api/customers", {
@@ -37,6 +40,24 @@ const ListCustomer = () => {
 
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`
   }
+
+  const handleDeleteCustomer = async (customer) => {
+    try {
+      await axios.delete(
+        `http://localhost:8080/api/customers/delete/${customer.id}`,
+        {
+          validateStatus: () => {
+            return true
+          },
+        }
+      )
+      loadCustomers()
+      console.log("Delete Customer Successfully")
+    } catch (error) {
+      console.log(error)
+      alert("Delete Customer Failed")
+    }
+  }
   return (
     <div
       className="container display-customers"
@@ -53,6 +74,7 @@ const ListCustomer = () => {
               <th>Create At</th>
               <th>Type</th>
               <th>Balance</th>
+              <th colSpan={2}>Fixed</th>
             </tr>
           </thead>
           <tbody>
@@ -69,15 +91,22 @@ const ListCustomer = () => {
                       <td>
                         <span
                           className={`badge ${
-                            customer.type === "VIP"
-                              ? "bg-warning"
-                              : "bg-success"
+                            customer.type === "Vip" ? "bg-danger" : "bg-success"
                           }`}
                         >
                           {customer.type}
                         </span>
                       </td>
                       <td>{customer.balance?.toLocaleString("vi-VN")} VND</td>
+
+                      <td>
+                        <button
+                          className="btn btn-primary delete-customer"
+                          onClick={() => navigate(`/update-customer/${customer.id}`)}
+                        >
+                          <FaEdit></FaEdit>
+                        </button>
+                      </td>
                     </tr>
                   )
                 })
