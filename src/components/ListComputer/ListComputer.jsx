@@ -13,18 +13,77 @@ const ListComputer = () => {
   const [rechargeInfo, setRechargeInfo] = useState(null)
   const [loadingServices, setLoadingServices] = useState(false)
 
-  // Ref để theo dõi máy đã được xử lý (tránh xử lý nhiều lần)
+  // STATE MỚI: Lưu balance realtime từ database theo computerId
+  const [customerBalances, setCustomerBalances] = useState({})
+
   const processedComputers = useRef(new Set())
   const navigate = useNavigate()
+
   // Cập nhật thời gian hiện tại mỗi giây
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
     return () => clearInterval(timer)
   }, [])
+
   useEffect(() => {
     loadComputers()
   }, [])
 
+  // Load balance realtime từ API cho tất cả máy đang sử dụng
+  useEffect(() => {
+    const loadAllBalances = async () => {
+      const balancePromises = computers
+        .filter((comp) => comp.status === "Using")
+        .map(async (comp) => {
+          const sessionKey = `computer_${comp.computerId}_session`
+          const sessionData = localStorage.getItem(sessionKey)
+
+          if (sessionData) {
+            try {
+              const parsed = JSON.parse(sessionData)
+              const username = parsed?.loginInfo?.username
+
+              if (username) {
+                const result = await axios.get(
+                  `http://localhost:8080/api/customers/name/${username}`
+                )
+
+                if (result.status === 200 && result.data) {
+                  return {
+                    computerId: comp.computerId,
+                    balance: result.data.balance,
+                  }
+                }
+              }
+            } catch (error) {
+              console.error(
+                `Lỗi load balance cho máy ${comp.computerId}:`,
+                error
+              )
+            }
+          }
+          return null
+        })
+
+      const results = await Promise.all(balancePromises)
+
+      // Cập nhật tất cả balance vào state
+      const newBalances = {}
+      results.forEach((result) => {
+        if (result) {
+          newBalances[result.computerId] = result.balance
+        }
+      })
+
+      setCustomerBalances(newBalances)
+    }
+
+    if (computers.length > 0) {
+      loadAllBalances()
+    }
+  }, [computers, currentTime]) // Load lại mỗi giây khi currentTime thay đổi
+
+  // Kiểm tra balance và yêu cầu nạp tiền
   useEffect(() => {
     computers.forEach((comp) => {
       if (comp.status === "Using") {
@@ -36,16 +95,24 @@ const ListComputer = () => {
         if (sessionData) {
           const startTime = sessionData?.session?.startTime
           const elapsedSeconds = getElapsedSeconds(startTime)
-          const total = calculateTotal(elapsedSeconds)
-          const balance = sessionData?.loginInfo?.balance
+          const totalCost = calculateTotalNumber(elapsedSeconds) // Lấy số thay vì string
 
-          if (total && balance) {
-            checkBalanceAndRecharge(comp, total, balance, sessionData) // kiểm tra balance từng giây
+          // Lấy balance realtime từ state
+          const realtimeBalance = customerBalances[comp.computerId]
+
+          // Chỉ kiểm tra khi có cả totalCost và balance
+          if (totalCost > 0 && realtimeBalance !== undefined) {
+            checkBalanceAndRecharge(
+              comp,
+              totalCost,
+              realtimeBalance,
+              sessionData
+            )
           }
         }
       }
     })
-  }, [currentTime, computers]) // Chạy mỗi giây khi currentTime thay đổi
+  }, [currentTime, computers, customerBalances])
 
   const loadComputers = async () => {
     try {
@@ -61,7 +128,6 @@ const ListComputer = () => {
     }
   }
 
-  // Load dịch vụ theo sessionId
   const loadServiceProducts = async (sessionId) => {
     if (!sessionId) {
       alert("Không có session ID!")
@@ -89,7 +155,6 @@ const ListComputer = () => {
     }
   }
 
-  // Tính tổng tiền dịch vụ
   const calculateServiceTotal = () => {
     return serviceProducts.reduce(
       (total, item) => total + item.quantity * item.price,
@@ -97,7 +162,6 @@ const ListComputer = () => {
     )
   }
 
-  //  Hàm định dạng startTime
   const formatDateTime = (isoString) => {
     if (!isoString) return ""
     const [datePart, timePart] = isoString.split("T")
@@ -107,7 +171,6 @@ const ListComputer = () => {
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`
   }
 
-  //  Tính thời gian đã sử dụng (theo giây)
   const getElapsedSeconds = (startTime) => {
     if (!startTime) return 0
 
@@ -117,7 +180,6 @@ const ListComputer = () => {
     return diff > 0 ? diff : 0
   }
 
-  //  Định dạng thời gian chạy hh:mm:ss
   const formatElapsedTime = (seconds) => {
     if (seconds <= 0) return "00:00:00"
     const hours = Math.floor(seconds / 3600)
@@ -129,42 +191,48 @@ const ListComputer = () => {
     )}:${String(secs).padStart(2, "0")}`
   }
 
-  // 💰 Tính tổng tiền từ số giây
-  const calculateTotal = (elapsedSeconds) => {
+  // Hàm tính tổng tiền trả về SỐ (dùng cho logic kiểm tra)
+  const calculateTotalNumber = (elapsedSeconds) => {
     const hours = elapsedSeconds / 3600
     const total = Math.floor(hours * 5000)
+    return total > 0 ? total : 0
+  }
+
+  // Hàm tính tổng tiền trả về STRING (dùng cho hiển thị)
+  const calculateTotal = (elapsedSeconds) => {
+    const total = calculateTotalNumber(elapsedSeconds)
     return total > 0 ? total.toLocaleString("vi-VN") + " ₫" : ""
   }
 
-  const checkBalanceAndRecharge = (comp, total, balance, sessionData) => {
-    const totalCost = parseInt(total) || 0
-    const balances = parseInt(balance) || 0
+  const checkBalanceAndRecharge = (
+    comp,
+    totalCost,
+    realtimeBalance,
+    sessionData
+  ) => {
+    const cost = parseInt(totalCost) || 0
+    const balance = parseInt(realtimeBalance) || 0
 
     // Kiểm tra xem máy này đã được xử lý chưa
-    const computerKey = `${comp.computerId}_${totalCost}`
+    const computerKey = `${comp.computerId}_${cost}`
     if (processedComputers.current.has(computerKey)) {
-      return // Đã xử lý rồi, bỏ qua
+      return
     }
 
-    if (totalCost >= balances) {
-      // Đánh dấu đã xử lý
+    // Nếu chi phí >= số dư -> yêu cầu nạp tiền
+    if (cost >= balance) {
       processedComputers.current.add(computerKey)
 
-      // Hiển thị thông tin yêu cầu nạp tiền
       setRechargeInfo({
         computerId: comp.computerId,
         username: sessionData?.loginInfo?.username,
-        total: total,
+        total: cost.toLocaleString("vi-VN") + " ₫",
         balance: balance,
       })
 
-      // Chuyển máy sang Offline
       setComputerOffline(comp)
-
-      // Hiển thị modal
       setShowRechargeModal(true)
 
-      // Xóa session khỏi localStorage
       const sessionKey = `computer_${comp.computerId}_session`
       localStorage.removeItem(sessionKey)
     }
@@ -180,7 +248,6 @@ const ListComputer = () => {
         }
       )
       console.log(`Máy ${comp.computerId} đã chuyển sang Offline`)
-
       loadComputers()
     } catch (error) {
       console.log(error)
@@ -223,7 +290,11 @@ const ListComputer = () => {
                   comp.status === "Using" ? getElapsedSeconds(startTime) : 0
                 const usageTime = formatElapsedTime(elapsedSeconds)
                 const total = calculateTotal(elapsedSeconds)
+                const totalNumber = calculateTotalNumber(elapsedSeconds)
                 const sessionId = sessionData?.session?.sessionId
+
+                // LẤY BALANCE REALTIME TỪ STATE
+                const realtimeBalance = customerBalances[comp.computerId]
 
                 return (
                   <tr
@@ -251,12 +322,23 @@ const ListComputer = () => {
                     <td style={{ fontWeight: "bold", color: "#1976d2" }}>
                       {usageTime}
                     </td>
-
                     <td style={{ fontWeight: "bold", color: "#d32f2f" }}>
                       {total}
                     </td>
-                    <td>
-                      {sessionData?.loginInfo?.balance
+                    <td
+                      style={{
+                        fontWeight: "bold",
+                        color:
+                          realtimeBalance !== undefined &&
+                          totalNumber > 0 &&
+                          realtimeBalance < totalNumber
+                            ? "#d32f2f" // Đỏ nếu balance < total
+                            : "#2e7d32", // Xanh nếu balance đủ
+                      }}
+                    >
+                      {realtimeBalance !== undefined
+                        ? `${realtimeBalance.toLocaleString("vi-VN")} VND`
+                        : sessionData?.loginInfo?.balance
                         ? `${sessionData.loginInfo.balance} VND`
                         : ""}
                     </td>
@@ -318,7 +400,7 @@ const ListComputer = () => {
                 <p>
                   <strong>Số dư:</strong>{" "}
                   <span className="text-warning">
-                    {rechargeInfo.balance} VND
+                    {rechargeInfo.balance.toLocaleString("vi-VN")} VND
                   </span>
                 </p>
               </div>
