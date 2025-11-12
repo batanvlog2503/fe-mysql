@@ -453,7 +453,7 @@ const ComputerDetails = ({ computer }) => {
                        <button
                         className="btn btn-secondary service"
                         onClick={() =>
-                          navigate("/service", {
+                          navigate("/payment", {
                             state: { loginInfo, services, session, computer },
                           })
                         }

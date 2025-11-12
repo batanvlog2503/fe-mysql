@@ -20,6 +20,7 @@ import Service from "./components/Service/Service"
 import ListComputer from "./components/ListComputer/ListComputer"
 import ListCustomer from "./components/ListCustomer/ListCustomer"
 import UpdateCustomer from "./components/UpdateCustomer/UpdateCustomer"
+import Payment from "./components/Payment/Payment"
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -51,6 +52,7 @@ function App() {
           path="list-customer"
           element={<ListCustomer />}
         ></Route>
+        <Route path = "payment" element = {<Payment/>}></Route>
         <Route path="update-customer/:id" element = {<UpdateCustomer/>}></Route>
       </Route>
     )
