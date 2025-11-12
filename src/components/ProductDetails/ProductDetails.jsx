@@ -66,7 +66,7 @@ const ProductDetails = ({ customer, service, session, computer }) => {
     <div className="container product-details">
       <div className="inner-wrap-product-details">
         <div className="title text-center">
-          <h2 style={{ color: "black" }}>Thông Tin Đơn Hàng</h2>
+          <h2 style={{ color: "black" }}>Thông Tin Dịch Vụ</h2>
         </div>
         <div className="title-customer">
           <h4>Id Customer: {customer.id}</h4>

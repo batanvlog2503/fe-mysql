@@ -228,10 +228,17 @@ const ComputerDetails = ({ computer }) => {
             }
           : null
 
+        const response = await axios.get(
+          `http://localhost:8080/api/customers/name/${foundUser.username}`,
+          {
+            validateStatus: () => true,
+          }
+        )
+
         localStorage.setItem(
           `computer_${computerId}_session`,
           JSON.stringify({
-            loginInfo: foundUser,
+            loginInfo: response.data,
             isLoggedIn: true,
             computerStatus: "Using",
             session: sessionDataToSave,
@@ -240,7 +247,7 @@ const ComputerDetails = ({ computer }) => {
         )
 
         // Cập nhật state
-        setLoginInfo(foundUser)
+        setLoginInfo(response.data)
         setIsLoggedIn(true)
         setComputerStatus("Using")
         setSession(sessionDataToSave)
@@ -298,7 +305,7 @@ const ComputerDetails = ({ computer }) => {
       const start = new Date(currentSession.startTime)
       const end = new Date(endTime)
       const diffInHours = (end - start) / (1000 * 60 * 60)
-      const totalCost = Math.ceil(diffInHours * 5000)
+      let totalCost = Math.ceil(diffInHours * 5000)
       if (loginInfo.type === "Vip") {
         // đổi với thẻ Vip
         totalCost = totalCost - (totalCost * 10) / 100
@@ -315,10 +322,12 @@ const ComputerDetails = ({ computer }) => {
 
       // Cập nhật balance
       await axios.put(
-        `http://localhost:8080/api/customers/update/${loginInfo.id}`,
+        `http://localhost:8080/api/customers/name/update/${loginInfo.username}`,
+        { balance: newBalance },
         {
-          ...loginInfo,
-          balance: newBalance.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       )
 
@@ -449,8 +458,8 @@ const ComputerDetails = ({ computer }) => {
                       >
                         Dịch Vụ
                       </button>
-                        
-                       <button
+
+                      <button
                         className="btn btn-secondary service"
                         onClick={() =>
                           navigate("/payment", {
@@ -479,7 +488,7 @@ const ComputerDetails = ({ computer }) => {
       </div>
 
       <div className="inner-wrap-service-product">
-        {active ? (
+        {active && computer && loginInfo.username && session.sessionId ? (
           <ServiceProduct
             computerSelected={computer}
             customerSelected={loginInfo}
