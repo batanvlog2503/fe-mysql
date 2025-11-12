@@ -41,23 +41,6 @@ const ListCustomer = () => {
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`
   }
 
-  const handleDeleteCustomer = async (customer) => {
-    try {
-      await axios.delete(
-        `http://localhost:8080/api/customers/delete/${customer.id}`,
-        {
-          validateStatus: () => {
-            return true
-          },
-        }
-      )
-      loadCustomers()
-      console.log("Delete Customer Successfully")
-    } catch (error) {
-      console.log(error)
-      alert("Delete Customer Failed")
-    }
-  }
   return (
     <div
       className="container display-customers"
@@ -97,12 +80,16 @@ const ListCustomer = () => {
                           {customer.type}
                         </span>
                       </td>
-                      <td>{customer.balance?.toLocaleString("vi-VN")} VND</td>
+                      <td>
+                        <b>{customer.balance?.toLocaleString("vi-VN")} VND</b>
+                      </td>
 
                       <td>
                         <button
                           className="btn btn-primary delete-customer"
-                          onClick={() => navigate(`/update-customer/${customer.id}`)}
+                          onClick={() =>
+                            navigate(`/update-customer/${customer.id}`)
+                          }
                         >
                           <FaEdit></FaEdit>
                         </button>

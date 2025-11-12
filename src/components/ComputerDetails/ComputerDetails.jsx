@@ -239,6 +239,7 @@ const ComputerDetails = ({ computer }) => {
           })
         )
 
+    
         // Cập nhật state
         setLoginInfo(foundUser)
         setIsLoggedIn(true)

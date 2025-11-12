@@ -26,7 +26,7 @@ const CreateAccount = () => {
         balance: customers.balance ? parseInt(customers.balance) : 0,
       }
       await axios.post("http://localhost:8080/api/customers", customerData)
-      
+
       setCustomers({
         username: "",
         password: "",
@@ -39,7 +39,7 @@ const CreateAccount = () => {
       alert("Sign UpSuccessfully")
     } catch (error) {
       console.log("message", error)
-      alert("Post Customer Failed")
+      alert("Tài khoản đã tồn tại")
     }
   }
   return (
