@@ -376,7 +376,7 @@ const ComputerDetails = ({ computer }) => {
       })
       setSession({})
       setServices(null)
-      window.location.reload();
+      window.location.reload()
       alert(
         `Tắt máy thành công!\n` +
           `Thời gian: ${diffInHours.toFixed(2)} giờ\n` +
@@ -433,12 +433,22 @@ const ComputerDetails = ({ computer }) => {
 
                 <div className="actions mt-3">
                   {!isLoggedIn && (
-                    <button
-                      className="btn btn-success me-2"
-                      onClick={handleOpenLogin}
-                    >
-                      Bật máy
-                    </button>
+                    <div>
+                      {" "}
+                      <button
+                        className="btn btn-success me-2"
+                        onClick={handleOpenLogin}
+                      >
+                        Bật máy
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-success"
+                        // onClick={handleClickServiceProduct}
+                      >
+                        Bảo Trì
+                      </button>
+                    </div>
                   )}
                   {isLoggedIn && (
                     <div className="logged-in d-flex justify-content-between">

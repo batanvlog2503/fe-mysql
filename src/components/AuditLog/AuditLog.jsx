@@ -9,8 +9,10 @@ const AuditLog = () => {
   const [showModel, setShowModel] = useState(false)
   const [showService, setShowService] = useState(false)
   const [orderedProducts, setOrderedProducts] = useState([])
+  const [allOrderedProducts, setAllOrderedProducts] = useState([])
   useEffect(() => {
     loadSessions()
+    loadAllOrderedProducts()
   }, [])
 
   const loadSessions = async () => {
@@ -56,6 +58,20 @@ const AuditLog = () => {
       alert("Get Info Customer Failed")
     }
   }
+  const loadAllOrderedProducts = async () => {
+    try {
+      // Load tất cả service products từ tất cả sessions
+      const response = await axios.get(
+        "http://localhost:8080/api/serviceproducts",
+        {
+          validateStatus: () => true,
+        }
+      )
+      setAllOrderedProducts(response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const handleClickService = async (sessionId) => {
     setShowService(true)
     if (!sessionId) {
@@ -97,15 +113,15 @@ const AuditLog = () => {
   }
 
   const calculateTotalOrder = () => {
-    // Giả sử mỗi session có thể có nhiều sản phẩm/dịch vụ
-    // Bạn cần điều chỉnh logic này dựa trên cấu trúc dữ liệu thực tế
-    let totalItems = 0
-    sessions.forEach((session) => {
-      if (session.services && Array.isArray(session.services)) {
-        totalItems += session.services.length
-      }
-    })
-    return totalItems * 5000 // Mỗi mặt hàng lãi 5000 VND
+    if (!Array.isArray(allOrderedProducts) || allOrderedProducts.length === 0) {
+      return 0
+    }
+
+    const totalQuantity = allOrderedProducts.reduce((sum, item) => {
+      return sum + (item.quantity || 0)
+    }, 0)
+
+    return totalQuantity * 5000
   }
   const calculateTimeUse = (startTime, endTime) => {
     if (!startTime || !endTime) return "N/A"

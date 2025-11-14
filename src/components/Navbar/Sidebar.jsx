@@ -2,7 +2,7 @@ import React, { useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
 // import { UserContext } from "./UserContext";
 import "./Sidebar.css"
-
+import { MdDashboard } from "react-icons/md"
 const Sidebar = () => {
   //const { user, setUser } = useContext(UserContext);
 
@@ -19,6 +19,11 @@ const Sidebar = () => {
       </div>
 
       <ul className="sidebar-menu">
+        <li>
+          <Link to="/dashboard">
+            <MdDashboard /> Dashboard
+          </Link>
+        </li>
         <li>
           <Link to="/">
             <i className="fa-solid fa-house"></i> Đặt máy

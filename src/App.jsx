@@ -22,6 +22,7 @@ import ListCustomer from "./components/ListCustomer/ListCustomer"
 import UpdateCustomer from "./components/UpdateCustomer/UpdateCustomer"
 import Payment from "./components/Payment/Payment"
 import AuditLog from "./components/AuditLog/AuditLog"
+import Dashboard from "./components/Dashboard/Dashboard"
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -32,6 +33,10 @@ function App() {
         <Route
           index
           element={<ComputerLayout />}
+        ></Route>
+        <Route
+          path="dashboard"
+          element={<Dashboard />}
         ></Route>
         <Route
           path="createaccount"
