@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react"
 const Session = ({ computerSelected, customerSelected, session }) => {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [elapsedTime, setElapsedTime] = useState("00:00:00")
+  const PRICE_PER_HOUR = 10000
 
+  const [totalCost, setTotalCost] = useState(0)
   // Cập nhật thời gian hiện tại mỗi giây
   useEffect(() => {
     const timer = setInterval(() => {
@@ -26,6 +28,7 @@ const Session = ({ computerSelected, customerSelected, session }) => {
 
       const now = currentTime
       const diff = Math.floor((now - adjustedStart) / 1000)
+      // trả về miliseconds
 
       // Xử lý trường hợp số âm
       if (diff < 0) {
@@ -43,6 +46,8 @@ const Session = ({ computerSelected, customerSelected, session }) => {
           "0"
         )}:${String(seconds).padStart(2, "0")}`
       )
+      const cost = Math.ceil((diff / 3600) * PRICE_PER_HOUR)
+      setTotalCost(cost)
     }
   }, [currentTime, session?.startTime])
 
@@ -74,7 +79,9 @@ const Session = ({ computerSelected, customerSelected, session }) => {
         marginTop: "15px",
       }}
     >
-      <h4 style={{ marginBottom: "10px", color: "Black" }}>Thông tin Session</h4>
+      <h4 style={{ marginBottom: "10px", color: "Black" }}>
+        Thông tin Session
+      </h4>
 
       <div style={{ marginBottom: "8px", color: "Black" }}>
         <b>Máy:</b> {computerSelected.computerId}
@@ -100,7 +107,9 @@ const Session = ({ computerSelected, customerSelected, session }) => {
           <div style={{ marginBottom: "8px", color: "Black" }}>
             <b>Thời gian hiện tại:</b> {currentTime.toLocaleString("vi-VN")}
           </div>
-
+          <div style={{ marginBottom: "8px", color: "Black" }}>
+            <b>Số tiền chơi: </b> {totalCost} VND
+          </div>
           <div
             style={{
               marginTop: "10px",

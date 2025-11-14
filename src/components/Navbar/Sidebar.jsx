@@ -24,19 +24,21 @@ const Sidebar = () => {
             <i className="fa-solid fa-house"></i> Đặt máy
           </Link>
         </li>
-        <li>
-          <Link to="/deposit-money">
-            <i className="fa-solid fa-newspaper"></i> Nạp Tiền
-          </Link>
-        </li>
+
         <li>
           <Link to="/list-computer">
             <i className="fa-solid fa-computer"></i> Máy trạm
           </Link>
         </li>
+
         <li>
-          <Link to="/write">
-            <i className="fa-solid fa-credit-card"></i> Hóa đơn
+          <Link to="/list-customer">
+            <i className="fa-solid fa-circle-user"></i> Tài khoản
+          </Link>
+        </li>
+        <li>
+          <Link to="/deposit-money">
+            <i className="fa-solid fa-newspaper"></i> Nạp Tiền
           </Link>
         </li>
         <li>
@@ -44,10 +46,9 @@ const Sidebar = () => {
             <i className="fa-solid fa-pen"></i> Tạo
           </Link>
         </li>
-
         <li>
-          <Link to="/list-customer">
-            <i className  ="fa-solid fa-circle-user"></i> Tài khoản
+          <Link to="/audit-log">
+            <i className="fa-solid fa-credit-card"></i> Lịch sử
           </Link>
         </li>
       </ul>
@@ -55,7 +56,7 @@ const Sidebar = () => {
       <div className="sidebar-footer">
         {/* // <p>👋 Xin chào, {user?.displayName}</p>
         // <button onClick={handleLogout} className="logout-btn">Log Out</button> */}
-        <p>HEllo PTIT</p>
+        <p>HELLO PTIT</p>
       </div>
     </div>
   )

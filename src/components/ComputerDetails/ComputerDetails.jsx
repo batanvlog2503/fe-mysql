@@ -376,7 +376,7 @@ const ComputerDetails = ({ computer }) => {
       })
       setSession({})
       setServices(null)
-
+      window.location.reload();
       alert(
         `Tắt máy thành công!\n` +
           `Thời gian: ${diffInHours.toFixed(2)} giờ\n` +

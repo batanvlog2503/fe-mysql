@@ -63,7 +63,7 @@ const ListCustomer = () => {
       className="container display-customers"
       style={{ maxWidth: "1400px" }}
     >
-      <h2>Danh sách Tài Khoản</h2>
+      <h2>Danh sách Tài Khoản {customers.length}</h2>
       <div className="inner-wrap-display-customers">
         <table className="table table-bordered align-middle text-center">
           <thead>
@@ -83,7 +83,7 @@ const ListCustomer = () => {
                   return (
                     <tr key={customer.id}>
                       <td>
-                        <b>{customer.id}</b>
+                        <b>{index + 1}</b>
                       </td>
                       <td>{customer?.username}</td>
                       <td>{customer?.password}</td>
@@ -102,7 +102,9 @@ const ListCustomer = () => {
                       <td>
                         <button
                           className="btn btn-primary delete-customer"
-                          onClick={() => navigate(`/update-customer/${customer.id}`)}
+                          onClick={() =>
+                            navigate(`/update-customer/${customer.id}`)
+                          }
                         >
                           <FaEdit></FaEdit>
                         </button>
