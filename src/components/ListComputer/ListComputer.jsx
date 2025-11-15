@@ -254,7 +254,17 @@ const ListComputer = () => {
       alert("Update computer failed")
     }
   }
-
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "Using":
+        return "bg-success"
+      case "Maintenance":
+        return "bg-danger "
+      case "Offline":
+      default:
+        return "bg-secondary"
+    }
+  }
   return (
     <div
       className="container mt-4"
@@ -306,13 +316,7 @@ const ListComputer = () => {
                     <td>{comp.computerId}</td>
                     <td>{`Máy ${comp.computerId}`}</td>
                     <td>
-                      <span
-                        className={`badge ${
-                          comp.status === "Using"
-                            ? "bg-success"
-                            : "bg-secondary"
-                        }`}
-                      >
+                      <span className={`badge ${getStatusClass(comp.status)}`}>
                         {comp.status}
                       </span>
                     </td>

@@ -18,7 +18,20 @@
   width: 180px; /* 👈 Thêm chiều rộng cố định */
   text-align: center;
   box-sizing: border-box; /* 👈 Đảm bảo border và padding không làm to khối */
-  background-color: orange;
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+}
+.computer-grid .Maintenance {
+  padding: 25px; /* hoặc giá trị bạn muốn */
+  border: 1px solid grey;
+  margin: 15px;
+  font-size: 18px;
+  font-weight: 600;
+
+  transition: all 0.5s ease-in-out;
+  width: 180px; /* 👈 Thêm chiều rộng cố định */
+  text-align: center;
+  box-sizing: border-box; /* 👈 Đảm bảo border và padding không làm to khối */
+  background-color: lightcoral;
 }
 
 .computer-grid .Offline {
@@ -37,11 +50,7 @@
 }
 /* 
 hover */
-.computer-grid button:hover {
-  border: 1px solid orange;
 
-  background-color: white;
-}
 
 /* scroll */
 .table-computer {

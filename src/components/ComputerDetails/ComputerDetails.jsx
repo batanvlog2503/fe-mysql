@@ -15,6 +15,31 @@ const ComputerDetails = ({ computer }) => {
       setActive(false)
     }
   }
+
+  const handleClickMaintenance = async (computer) => {
+    if (!isMaintenanceIn) {
+      setIsMaintenanceIn(true)
+      // setIsLoggedIn(true)
+    } else {
+      setIsMaintenanceIn(false)
+    }
+
+    try {
+      const computerId = computer.computerId
+      await axios.put(
+        `http://localhost:8080/api/computers/update/${computerId}`,
+        {
+          ...computer,
+          status: "Maintenance",
+        }
+      )
+      alert("Update Computer Maintenance Succesfully")
+      window.location.reload()
+    } catch (error) {
+      console.log(error)
+      alert("Change Maintenance failed")
+    }
+  }
   const navigate = useNavigate()
   const [showLoginForm, setShowLoginForm] = useState(false)
   const [computerStatus, setComputerStatus] = useState(
@@ -32,6 +57,7 @@ const ComputerDetails = ({ computer }) => {
     username: "",
     password: "",
   })
+  const [isMaintenanceIn, setIsMaintenanceIn] = useState(false)
   const [session, setSession] = useState({})
 
   // Load thông tin từ localStorage khi component mount hoặc computer thay đổi
@@ -389,6 +415,25 @@ const ComputerDetails = ({ computer }) => {
       alert("Có lỗi khi tắt máy: " + error.message)
     }
   }
+  const handleChangeMaintenance = async () => {
+    setIsMaintenanceIn(false)
+    setIsLoggedIn(false)
+    try {
+      const computerId = computer.computerId
+      await axios.put(
+        `http://localhost:8080/api/computers/update/${computerId}`,
+        {
+          ...computer,
+          status: "Offline",
+        }
+      )
+      alert("Turn Off Maintenance Successfully")
+      window.location.reload()
+    } catch (error) {
+      console.log(error)
+      alert("Change Maintenance failed")
+    }
+  }
 
   return (
     <div
@@ -432,21 +477,34 @@ const ComputerDetails = ({ computer }) => {
                 ) : null}
 
                 <div className="actions mt-3">
-                  {!isLoggedIn && (
+                  {!isLoggedIn &&
+                    !isMaintenanceIn &&
+                    computer.status !== "Maintenance" && (
+                      <div>
+                        {" "}
+                        <button
+                          className="btn btn-success me-2"
+                          onClick={handleOpenLogin}
+                        >
+                          Bật máy
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-warning"
+                          onClick={() => handleClickMaintenance(computer)}
+                        >
+                          Bảo Trì
+                        </button>
+                      </div>
+                    )}
+                  {(isMaintenanceIn || computer.status === "Maintenance") && (
                     <div>
-                      {" "}
-                      <button
-                        className="btn btn-success me-2"
-                        onClick={handleOpenLogin}
-                      >
-                        Bật máy
-                      </button>
                       <button
                         type="button"
-                        className="btn btn-success"
-                        // onClick={handleClickServiceProduct}
+                        className="btn btn-info me-2"
+                        onClick={handleChangeMaintenance}
                       >
-                        Bảo Trì
+                        Tắt Bảo trì
                       </button>
                     </div>
                   )}

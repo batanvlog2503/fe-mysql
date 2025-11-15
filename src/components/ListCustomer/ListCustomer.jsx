@@ -63,7 +63,7 @@ const ListCustomer = () => {
       className="container display-customers"
       style={{ maxWidth: "1400px" }}
     >
-      <h2>Danh sách Tài Khoản {customers.length}</h2>
+      <h2>Danh sách Tài Khoản ({customers.length})</h2>
       <div className="inner-wrap-display-customers">
         <table className="table table-bordered align-middle text-center">
           <thead>

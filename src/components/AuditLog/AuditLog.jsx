@@ -174,7 +174,7 @@ const AuditLog = () => {
         }}
       >
         <h4 style={{ margin: 0, color: "#b92020ff" }}>
-          Tổng Doanh Thu Mặt Hàng:{" "}
+          Tổng Lãi Mặt Hàng:{" "}
           <span style={{ fontWeight: "bold" }}>
             {calculateTotalOrder().toLocaleString("vi-VN")} VND
           </span>

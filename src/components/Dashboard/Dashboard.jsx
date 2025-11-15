@@ -9,12 +9,29 @@ const Dashboard = () => {
   const [products, setProducts] = useState([])
   const [sessions, setSessions] = useState([])
   const [customers, setCustomers] = useState([])
+  const [allOrderedProducts, setAllOrderedProducts] = useState([])
   useEffect(() => {
     loadComputers()
     loadCustomers()
     loadSessions()
     loadProducts()
+    loadAllOrderedProducts()
   }, [])
+  const loadAllOrderedProducts = async () => {
+    try {
+      // Load tất cả service products từ tất cả sessions
+      const response = await axios.get(
+        "http://localhost:8080/api/serviceproducts",
+        {
+          validateStatus: () => true,
+        }
+      )
+      setAllOrderedProducts(response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const loadComputers = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/api/computers`, {
@@ -33,8 +50,10 @@ const Dashboard = () => {
         (el) => el.status === "Offline"
       )
       setComputersOffline(computerOffline)
-      // const computerMaintenance = response.data.filter(el => el.status === "Maintenance");
-      // setComputersMaintenance(computerMaintenance)
+      const computerMaintenance = response.data.filter(
+        (el) => el.status === "Maintenance"
+      )
+      setComputersMaintenance(computerMaintenance)
     } catch (error) {
       console.log(error)
       alert("Load Computers Failed")
@@ -88,16 +107,17 @@ const Dashboard = () => {
     }
   }
   const calculateTotalOrder = () => {
-    // Giả sử mỗi session có thể có nhiều sản phẩm/dịch vụ
-    // Bạn cần điều chỉnh logic này dựa trên cấu trúc dữ liệu thực tế
-    let totalItems = 0
-    sessions.forEach((session) => {
-      if (session.services && Array.isArray(session.services)) {
-        totalItems += session.services.length
-      }
-    })
-    return totalItems * 5000 // Mỗi mặt hàng lãi 5000 VND
+    if (!Array.isArray(allOrderedProducts) || allOrderedProducts.length === 0) {
+      return 0
+    }
+
+    const totalQuantity = allOrderedProducts.reduce((sum, item) => {
+      return sum + (item.quantity || 0)
+    }, 0)
+
+    return totalQuantity * 5000
   }
+
   return (
     <div className="container-fluid dashboard-wrapper">
       <div className="container">
@@ -293,7 +313,9 @@ const Dashboard = () => {
                       </div>
                       <p className="status-label">Bảo Trì</p>
                     </div>
-                    <span className="status-count">3</span>
+                    <span className="status-count">
+                      {computersMaintenance.length}
+                    </span>
                   </div>
                   <div className="status-item">
                     <div className="status-left">

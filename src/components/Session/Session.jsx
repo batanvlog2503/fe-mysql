@@ -1,12 +1,82 @@
 import React, { useEffect, useState } from "react"
-
+import { useRef } from "react"
+import axios from "axios"
 const Session = ({ computerSelected, customerSelected, session }) => {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [elapsedTime, setElapsedTime] = useState("00:00:00")
   const PRICE_PER_HOUR = 10000
 
   const [totalCost, setTotalCost] = useState(0)
-  // Cập nhật thời gian hiện tại mỗi giây
+  const hasShutdownRef = useRef(false) // Để tránh gọi shutdown nhiều lần
+
+  // const remainingBalance = parseInt(customerSelected.balance) - totalCost
+  // const isLowBalance = remainingBalance < 10000 // Cảnh báo khi còn dưới 10k
+  const autoShutdown = async () => {
+    if (hasShutdownRef.current) return // Đã tắt rồi thì không tắt nữa
+    hasShutdownRef.current = true
+
+    try {
+      const endTime = new Date().toISOString()
+      const storageKey = `computer_${computerSelected.computerId}_session`
+
+      // Tính toán chi phí cuối cùng
+      const startDate = new Date(session.startTime)
+      const timezoneOffset = 7 * 60 * 60 * 1000
+      const adjustedStart = new Date(startDate.getTime() - timezoneOffset)
+      const now = new Date()
+      const diffInHours = (now - adjustedStart) / (1000 * 60 * 60) // elapsedTime
+      let finalCost = Math.ceil(diffInHours * PRICE_PER_HOUR)
+
+      await axios.put(
+        `http://localhost:8080/api/customers/name/update/${customerSelected.username}`,
+        { balance: 0 },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+
+      // Cập nhật session với endTime và total
+      if (session.sessionId) {
+        await axios.put(
+          `http://localhost:8080/api/sessions/update/${session.sessionId}`,
+          {
+            ...session,
+            endTime: endTime,
+            total: finalCost,
+          }
+        )
+      }
+
+      // Cập nhật trạng thái máy về Offline
+      await axios.put(
+        `http://localhost:8080/api/computers/update/${computerSelected.computerId}`,
+        {
+          ...computerSelected,
+          status: "Offline",
+        }
+      )
+
+      // Xóa localStorage
+      localStorage.removeItem(storageKey)
+
+      alert(
+        `HẾT TIỀN!\n\n` +
+          `Thời gian sử dụng: ${diffInHours.toFixed(2)} giờ\n` +
+          `Tổng chi phí: ${finalCost.toLocaleString("vi-VN")} VND\n` +
+          `Số dư còn lại: 0 VND\n\n` +
+          `Máy sẽ tự động tắt.`
+      )
+
+      window.location.reload()
+    } catch (error) {
+      console.error("Error during auto shutdown:", error)
+      alert("Lỗi khi tự động tắt máy: " + error.message)
+      hasShutdownRef.current = false // Reset flag nếu có lỗi
+    }
+  }
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date())
@@ -19,16 +89,12 @@ const Session = ({ computerSelected, customerSelected, session }) => {
   useEffect(() => {
     if (session?.startTime) {
       // Parse startTime từ ISO string và TRỪ ĐI 7 giờ để đúng với thời gian thực
-      // Vì new Date() sẽ tự động cộng 7h khi parse ISO string
       const startDate = new Date(session.startTime)
-
-      // Tạo thời gian bắt đầu đúng bằng cách trừ đi offset timezone
-      const timezoneOffset = 7 * 60 * 60 * 1000 // 7 giờ tính bằng milliseconds
+      const timezoneOffset = 7 * 60 * 60 * 1000
       const adjustedStart = new Date(startDate.getTime() - timezoneOffset)
 
       const now = currentTime
       const diff = Math.floor((now - adjustedStart) / 1000)
-      // trả về miliseconds
 
       // Xử lý trường hợp số âm
       if (diff < 0) {
@@ -46,12 +112,27 @@ const Session = ({ computerSelected, customerSelected, session }) => {
           "0"
         )}:${String(seconds).padStart(2, "0")}`
       )
-      const cost = Math.ceil((diff / 3600) * PRICE_PER_HOUR)
-      setTotalCost(cost)
-    }
-  }, [currentTime, session?.startTime])
 
-  // Format thời gian - KHÔNG convert timezone, giữ nguyên giá trị
+      let cost = Math.ceil((diff / 3600) * PRICE_PER_HOUR)
+
+      // Áp dụng giảm giá VIP
+      if (customerSelected.type === "Vip") {
+        cost = cost - (cost * 10) / 100
+      }
+
+      setTotalCost(cost)
+
+      // KIỂM TRA NẾU HẾT TIỀN
+      if (
+        cost >= parseInt(customerSelected.balance) &&
+        !hasShutdownRef.current
+      ) {
+        console.log("Hết tiền! Tự động tắt máy...")
+        autoShutdown()
+      }
+    }
+  }, [currentTime, session?.startTime, customerSelected.balance])
+  
   const formatDateTime = (isoString) => {
     if (!isoString) return "N/A"
 
