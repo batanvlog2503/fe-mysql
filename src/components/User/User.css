@@ -1,0 +1,154 @@
+.login {
+  background-color: white;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.launch {
+  flex: 1; /* chiếm không gian còn lại */
+  display: flex;
+  justify-content: center; /* canh ngang */
+  align-items: center; /* canh dọc */
+  font-size: 2rem; /* tùy chỉnh cỡ chữ */
+}
+
+.launch p {
+  color: black;
+  font-size: 80px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+
+.wrapper {
+  width: 100%;
+}
+
+/* Vùng bọc form */
+.wrapper .form-login {
+  border-radius: 30px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  height: 600px;
+
+  background-color: transparent;
+  max-width: 500px;
+  width: 90%;
+  padding: 60px 80px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* thêm đổ bóng cho nổi bật */
+}
+
+.wrapper .form-login .form-control {
+  flex: 1; /* giữ input chiếm hết phần còn lại */
+  min-width: 250px; /* giới hạn nhỏ nhất khi co màn hình */
+  font-size: 16px;
+}
+
+/* Icon label */
+
+.wrapper .form-login .input-group input::placeholder {
+  font-weight: 450;
+}
+.wrapper .form-login .input-group label {
+  padding: 15px;
+  border: none;
+}
+.wrapper .form-login .input-group {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+.wrapper .form-login .input-group input {
+  color: black;
+  font-weight: 500;
+  background-color: transparent;
+}
+
+.wrapper .input-group input:focus {
+  color: black;
+  font-weight: 500;
+}
+.form-login .input-group {
+  width: 100%;
+  height: 50px;
+}
+/* Khi màn hình nhỏ, giữ input full width */
+
+.wrapper .button-submit {
+  width: 100%;
+}
+.wrapper .button-submit button {
+  padding: 12px;
+  border-radius: 25px;
+  background-color: white;
+  color: black;
+  font-weight: 600;
+  transition: background-color 0.5s ease-in-out;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.button-submit button:hover {
+  background-color: orange;
+  color: white;
+  border: 1px solid orange;
+}
+
+.register-link {
+  padding: 12px;
+  margin-top: 10px;
+}
+
+.register-link p {
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.register-link button {
+  font-size: 20px;
+  font-weight: 600;
+  text-decoration: none;
+  color: black;
+  background-color: transparent;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border: 1px solid grey;
+  border-radius: 10px;
+  padding: 5px;
+  transition: background-color 0.5s ease;
+}
+
+.register-link button:hover {
+  font-size: 20px;
+  font-weight: 600;
+  text-decoration: none;
+  color: white;
+  background-color: orange;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border: none;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.button-submit {
+  margin: 25px 0;
+}
+.wrapper .form-login .form-control {
+  background-color: rgba(255, 255, 255, 0.05); /* nền hơi trong suốt nhẹ */
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  box-shadow: none;
+  transition: all 0.3s ease;
+}
+
+/* Hiệu ứng khi focus vào input */
+.wrapper .form-login .form-control:focus {
+  background-color: rgba(255, 255, 255, 0.08); /* sáng hơn 1 chút khi focus */
+  border-color: orange; /* màu viền xanh lam nhạt */
+  box-shadow: 0 0 10px orange; /* ánh sáng tỏa ra ngoài */
+  outline: none;
+}
+
+/* Màu placeholder */
+.wrapper .form-login .form-control::placeholder {
+  color: grey;
+}

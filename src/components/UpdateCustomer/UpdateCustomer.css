@@ -1,4 +1,4 @@
-.deposit-money {
+.update-customer {
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -6,29 +6,29 @@
   padding: 20px;
 }
 
-.inner-wrap-deposit {
+.inner-wrap-update {
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
 }
 
-.form-deposit {
+.form-update {
   background: white;
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.title-deposit h3 {
-  margin-bottom: 20px;
+.title-update h4 {
+  margin-bottom: 30px;
 }
 
-/* Style cho input group */
-.deposit-money .input-group {
+/* Input group styles */
+.update-customer .input-group {
   margin-bottom: 1rem;
 }
 
-.deposit-money .input-group-text {
+.update-customer .input-group-text {
   min-width: 45px;
   display: flex;
   justify-content: center;
@@ -37,56 +37,44 @@
   border-right: none;
 }
 
-.deposit-money .form-control {
+.update-customer .form-control,
+.update-customer .form-select {
   border-left: none;
   padding: 10px 15px;
   height: 45px;
 }
 
-/* Style cho button tìm kiếm */
-.deposit-money .input-group .btn-outline-primary {
-  border-left: 1px solid #ced4da;
-  padding: 0 20px;
-  white-space: nowrap;
-}
-
 /* Focus state */
-.deposit-money .form-control:focus {
+.update-customer .form-control:focus,
+.update-customer .form-select:focus {
   border-color: #ced4da;
   box-shadow: none;
 }
 
-.deposit-money .input-group:focus-within .input-group-text {
+.update-customer .input-group:focus-within .input-group-text {
   border-color: #86b7fe;
   background-color: #e7f1ff;
 }
 
-/* Alert style */
-.deposit-money .alert {
-  border-radius: 8px;
-  font-size: 16px;
-  padding: 15px;
-}
-
-/* Button submit style */
-.button-submit button {
-  height: 50px;
+/* Button group styles */
+.button-group button {
+  height: 45px;
   font-size: 16px;
   font-weight: 600;
   transition: all 0.3s ease;
 }
 
-.button-submit button:hover:not(:disabled) {
+.button-group button:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.button-submit button:disabled {
+.button-group button:disabled {
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-/* Spinner */
+/* Loading spinner */
 .spinner-border-sm {
   width: 1rem;
   height: 1rem;
@@ -95,16 +83,11 @@
 
 /* Responsive */
 @media (max-width: 576px) {
-  .form-deposit {
+  .form-update {
     padding: 20px;
   }
-  
-  .title-deposit h3 {
+
+  .title-update h4 {
     font-size: 30px !important;
-  }
-  
-  .deposit-money .input-group .btn-outline-primary {
-    padding: 0 15px;
-    font-size: 14px;
   }
 }

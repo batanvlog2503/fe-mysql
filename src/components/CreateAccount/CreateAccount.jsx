@@ -1,16 +1,17 @@
 import React, { useState } from "react"
 import "./CreateAccount.css"
 import axios from "axios"
+
 const CreateAccount = () => {
   const [customers, setCustomers] = useState({
     username: "",
     password: "",
-
     type: "",
     balance: "",
   })
 
   const { username, password, type, balance } = customers
+
   const handleInputChange = (e) => {
     setCustomers({ ...customers, [e.target.name]: e.target.value })
   }
@@ -26,22 +27,22 @@ const CreateAccount = () => {
         balance: customers.balance ? parseInt(customers.balance) : 0,
       }
       await axios.post("http://localhost:8080/api/customers", customerData)
-      
+
       setCustomers({
         username: "",
         password: "",
-
         type: "",
         balance: "",
       })
 
       console.log("Sign Up Successfully")
-      alert("Sign UpSuccessfully")
+      alert("Sign Up Successfully")
     } catch (error) {
       console.log("message", error)
       alert("Post Customer Failed")
     }
   }
+
   return (
     <div className="container create-account">
       <div className="inner-wrap-create-account launch">
@@ -61,11 +62,10 @@ const CreateAccount = () => {
 
           <form
             action=""
-            className="input-group mb-5"
             autoComplete="off"
             onSubmit={(e) => saveCustomers(e)}
           >
-            <div className="input-group">
+            <div className="input-group mb-3">
               <label
                 htmlFor="username"
                 className="input-group-text"
@@ -89,7 +89,8 @@ const CreateAccount = () => {
                 autoComplete="new-password"
               />
             </div>
-            <div className="input-group">
+
+            <div className="input-group mb-3">
               <label
                 htmlFor="password"
                 className="input-group-text"
@@ -111,7 +112,7 @@ const CreateAccount = () => {
               />
             </div>
 
-            <div className="input-group ">
+            <div className="input-group mb-3">
               <label
                 htmlFor="balance"
                 className="input-group-text"
@@ -128,12 +129,12 @@ const CreateAccount = () => {
                 aria-describedby="basic-addon1"
                 value={balance}
                 onChange={(e) => handleInputChange(e)}
-                step="1" // mỗi lần tăng giảm là 1000
-                min="0" // không cho nhập số âm
+                step="1"
+                min="0"
               />
             </div>
 
-            <div className="input-group ">
+            <div className="input-group mb-3">
               <label
                 htmlFor="type"
                 className="input-group-text"
@@ -152,7 +153,7 @@ const CreateAccount = () => {
               </select>
             </div>
 
-            <div className="button-submit sign-up">
+            <div className="button-submit sign-up mt-4">
               <button
                 type="submit"
                 className="btn btn-outline-success w-100"

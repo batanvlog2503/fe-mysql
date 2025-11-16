@@ -519,7 +519,7 @@ const ComputerDetails = ({ computer }) => {
                       <button
                         className="btn btn-primary service"
                         onClick={() =>
-                          navigate("/service", {
+                          navigate("/main/service", {
                             state: { loginInfo, services, session, computer },
                           })
                         }
@@ -530,7 +530,7 @@ const ComputerDetails = ({ computer }) => {
                       <button
                         className="btn btn-secondary service"
                         onClick={() =>
-                          navigate("/payment", {
+                          navigate("/main/payment", {
                             state: { loginInfo, services, session, computer },
                           })
                         }

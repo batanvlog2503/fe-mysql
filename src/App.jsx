@@ -23,54 +23,76 @@ import UpdateCustomer from "./components/UpdateCustomer/UpdateCustomer"
 import Payment from "./components/Payment/Payment"
 import AuditLog from "./components/AuditLog/AuditLog"
 import Dashboard from "./components/Dashboard/Dashboard"
+
+import User from "./components/User/User"
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route
-        path="/"
-        element={<MainLayout />}
-      >
-        <Route
-          index
-          element={<ComputerLayout />}
-        ></Route>
-        <Route
-          path="dashboard"
-          element={<Dashboard />}
-        ></Route>
-        <Route
-          path="createaccount"
-          element={<CreateAccount />}
-        ></Route>
-        <Route
-          path="service"
-          element={<Service />}
-        ></Route>
-        <Route
-          path="list-computer"
-          element={<ListComputer />}
-        ></Route>
-        <Route
-          path="deposit-money"
-          element={<DepositMoney />}
-        ></Route>
-        <Route
-          path="list-customer"
-          element={<ListCustomer />}
-        ></Route>
-        <Route
-          path="audit-log"
-          element={<AuditLog />}
-        ></Route>
-        <Route
-          path="payment"
-          element={<Payment />}
-        ></Route>
-        <Route
-          path="update-customer/:id"
-          element={<UpdateCustomer />}
-        ></Route>
-      </Route>
+      <>
+        {" "}
+        <>
+          {/* Route mặc định là trang đăng nhập */}
+          <Route
+            path="/"
+            element={<User />}
+          />
+          <Route
+            path="/login"
+            element={<User />}
+          />
+
+          {/* Routes chính - trong MainLayout (yêu cầu đăng nhập) */}
+          <Route
+            path="/main"
+            element={<MainLayout />}
+          >
+            <Route
+              index
+              element={<Dashboard />}
+            />
+            <Route
+              path="dashboard"
+              element={<Dashboard />}
+            />
+            <Route
+              path="computer"
+              element={<ComputerLayout />}
+            />
+            <Route
+              path="deposit-money"
+              element={<DepositMoney />}
+            />
+            <Route
+              path="create-account"
+              element={<CreateAccount />}
+            />
+            <Route
+              path="service"
+              element={<Service />}
+            />
+            <Route
+              path="list-computer"
+              element={<ListComputer />}
+            />
+            <Route
+              path="list-customer"
+              element={<ListCustomer />}
+            />
+            <Route
+              path="update-customer/:id"
+              element={<UpdateCustomer />}
+            />
+            <Route
+              path="payment"
+              element={<Payment />}
+            />
+            <Route
+              path="audit-log"
+              element={<AuditLog />}
+            />
+          </Route>
+        </>
+      </>
     )
   )
 

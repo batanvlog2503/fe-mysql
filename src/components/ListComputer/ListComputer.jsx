@@ -421,7 +421,7 @@ const ListComputer = () => {
                   onClick={() => {
                     setShowRechargeModal(false)
                     setRechargeInfo(null)
-                    navigate("/deposit-money")
+                    navigate("/main/deposit-money")
                   }}
                 >
                   Nạp tiền

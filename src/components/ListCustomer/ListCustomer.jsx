@@ -103,7 +103,7 @@ const ListCustomer = () => {
                         <button
                           className="btn btn-primary delete-customer"
                           onClick={() =>
-                            navigate(`/update-customer/${customer.id}`)
+                            navigate(`/main/update-customer/${customer.id}`)
                           }
                         >
                           <FaEdit></FaEdit>

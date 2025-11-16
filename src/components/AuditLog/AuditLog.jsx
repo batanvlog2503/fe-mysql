@@ -202,12 +202,16 @@ const AuditLog = () => {
             {sessions && sessions.length > 0 ? (
               sessions.map((session, index) => (
                 <tr key={index}>
-                  <td>{index + 1}</td>
+                  <td>
+                    <b>{index + 1}</b>
+                  </td>
                   <td>{session.customerId}</td>
                   <td>
-                    {session.services?.length > 0
-                      ? session.services[0].customer.username
-                      : "No user"}
+                    <b>
+                      {session.services?.length > 0
+                        ? session.services[0].customer.username
+                          : "No user"}
+                    </b>
                   </td>
                   <td>{session.computerId}</td>
                   <td>{session.sessionId}</td>

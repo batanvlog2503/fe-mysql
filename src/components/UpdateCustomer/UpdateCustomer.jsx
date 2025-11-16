@@ -1,9 +1,11 @@
 import axios from "axios"
-import React, { useState } from "react"
-import { useLocation, useParams } from "react-router-dom"
-import { useEffect } from "react"
+import React, { useState, useEffect } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import "./UpdateCustomer.css"
+
 const UpdateCustomer = () => {
   const { id } = useParams()
+  const navigate = useNavigate()
 
   const [customer, setCustomer] = useState({
     username: "",
@@ -11,6 +13,7 @@ const UpdateCustomer = () => {
     type: "",
     balance: "",
   })
+  const [isLoading, setIsLoading] = useState(false)
 
   const { username, password, type, balance } = customer
 
@@ -21,7 +24,9 @@ const UpdateCustomer = () => {
   const handleInputChange = (e) => {
     setCustomer({ ...customer, [e.target.name]: e.target.value })
   }
+
   const loadCustomer = async () => {
+    setIsLoading(true)
     try {
       const result = await axios.get(
         `http://localhost:8080/api/customers/${id}`,
@@ -36,12 +41,15 @@ const UpdateCustomer = () => {
       setCustomer(result.data)
     } catch (error) {
       console.log(error)
-      alert("Get Customer By Id Failed")
+      alert("Không thể tải thông tin khách hàng")
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const saveCustomer = async (e) => {
     e.preventDefault()
+    setIsLoading(true)
 
     try {
       const response = await axios.put(
@@ -53,19 +61,39 @@ const UpdateCustomer = () => {
           },
         }
       )
-      console.log("Update Customer By Id Successfully")
-      alert("Update Customer By Id Successfully")
+      console.log("Update Customer Successfully")
+      alert("Cập nhật thông tin khách hàng thành công!")
+      // Có thể navigate về trang danh sách customer
+      // navigate("/main/list-customer")
     } catch (error) {
       console.log(error)
-      alert("Update Customer By Id Failed")
+      alert("Cập nhật thông tin khách hàng thất bại")
+    } finally {
+      setIsLoading(false)
     }
   }
 
+  if (isLoading && !username) {
+    return (
+      <div className="container update-customer">
+        <div className="text-center mt-5">
+          <div
+            className="spinner-border text-primary"
+            role="status"
+          >
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="mt-3">Đang tải thông tin...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="container create-account">
-      <div className="inner-wrap-create-account launch">
-        <div className="form-login">
-          <div className="title-login text-center">
+    <div className="container update-customer">
+      <div className="inner-wrap-update">
+        <div className="form-update">
+          <div className="title-update text-center">
             <h4
               style={{
                 fontSize: "40px",
@@ -74,41 +102,38 @@ const UpdateCustomer = () => {
                 padding: "20px",
               }}
             >
-              Tạo Tài Khoản
+              Cập Nhật Tài Khoản
             </h4>
           </div>
 
           <form
-            action=""
-            className="input-group mb-5"
             autoComplete="off"
             onSubmit={(e) => saveCustomer(e)}
           >
-            <div className="input-group">
+            {/* Username */}
+            <div className="input-group mb-3">
               <label
                 htmlFor="username"
                 className="input-group-text"
               >
-                <i
-                  className="fa-solid fa-user"
-                  style={{ marginLeft: "0px" }}
-                ></i>
+                <i className="fa-solid fa-user"></i>
               </label>
               <input
                 type="text"
                 className="form-control"
                 name="username"
                 id="username"
-                placeholder="username"
+                placeholder="Username"
                 aria-label="username"
-                aria-describedby="basic-addon1"
                 value={username}
                 onChange={(e) => handleInputChange(e)}
                 required
                 autoComplete="new-password"
               />
             </div>
-            <div className="input-group">
+
+            {/* Password */}
+            <div className="input-group mb-3">
               <label
                 htmlFor="password"
                 className="input-group-text"
@@ -120,9 +145,8 @@ const UpdateCustomer = () => {
                 className="form-control"
                 name="password"
                 id="password"
-                placeholder="password"
+                placeholder="Password"
                 aria-label="password"
-                aria-describedby="basic-addon1"
                 value={password}
                 onChange={(e) => handleInputChange(e)}
                 required
@@ -130,7 +154,8 @@ const UpdateCustomer = () => {
               />
             </div>
 
-            <div className="input-group ">
+            {/* Balance */}
+            <div className="input-group mb-3">
               <label
                 htmlFor="balance"
                 className="input-group-text"
@@ -142,17 +167,17 @@ const UpdateCustomer = () => {
                 className="form-control"
                 name="balance"
                 id="balance"
-                placeholder="Số tiền nạp"
+                placeholder="Số dư tài khoản"
                 aria-label="balance"
-                aria-describedby="basic-addon1"
                 value={balance}
                 onChange={(e) => handleInputChange(e)}
-                step="1" // mỗi lần tăng giảm là 1000
-                min="0" // không cho nhập số âm
+                step="1"
+                min="0"
               />
             </div>
 
-            <div className="input-group ">
+            {/* Type */}
+            <div className="input-group mb-3">
               <label
                 htmlFor="type"
                 className="input-group-text"
@@ -171,12 +196,33 @@ const UpdateCustomer = () => {
               </select>
             </div>
 
-            <div className="button-submit sign-up">
+            {/* Buttons */}
+            <div className="button-group mt-4">
               <button
                 type="submit"
-                className="btn btn-outline-success w-100"
+                className="btn btn-success w-100 mb-2"
+                disabled={isLoading}
               >
-                Sign Up
+                {isLoading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2"></span>
+                    Đang cập nhật...
+                  </>
+                ) : (
+                  <>
+                    <i className="fa-solid fa-save me-2"></i>
+                    Cập Nhật
+                  </>
+                )}
+              </button>
+              <button
+                type="button"
+                className="btn btn-outline-secondary w-100"
+                onClick={() => navigate(-1)}
+                disabled={isLoading}
+              >
+                <i className="fa-solid fa-arrow-left me-2"></i>
+                Quay Lại
               </button>
             </div>
           </form>
