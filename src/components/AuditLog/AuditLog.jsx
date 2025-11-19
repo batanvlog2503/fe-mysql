@@ -210,7 +210,7 @@ const AuditLog = () => {
                     <b>
                       {session.services?.length > 0
                         ? session.services[0].customer.username
-                          : "No user"}
+                        : "No user"}
                     </b>
                   </td>
                   <td>{session.computerId}</td>

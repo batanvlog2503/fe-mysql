@@ -4,9 +4,11 @@ import axios from "axios"
 import { useState, useEffect } from "react"
 import { FaTrashAlt, FaEdit } from "react-icons/fa"
 import { useNavigate } from "react-router-dom"
+import Search from "../Search/Search"
 const ListCustomer = () => {
   const [customers, setCustomers] = useState([])
-
+  const [search, setSearch] = useState("") //
+  const [filteredCustomer, setFilteredCustomer] = useState([])
   useEffect(() => {
     loadCustomers()
   }, [])
@@ -22,6 +24,7 @@ const ListCustomer = () => {
 
       console.log(result.data)
       setCustomers(result.data)
+      setFilteredCustomer(result.data)
     } catch (error) {
       console.log(error)
       alert("Get Customers Failed")
@@ -52,10 +55,34 @@ const ListCustomer = () => {
         }
       )
       loadCustomers()
+
       console.log("Delete Customer Successfully")
     } catch (error) {
       console.log(error)
       alert("Delete Customer Failed")
+    }
+  }
+  const handleSearch = async (searchTerm) => {
+    if (!searchTerm || searchTerm.trim() === "") {
+      setFilteredCustomer(customers)
+      return
+    }
+
+    try {
+      const result = await axios.get(
+        `http://localhost:8080/api/customers/name/${searchTerm}`,
+        {
+          validateStatus: () => {
+            return true
+          },
+        }
+      )
+
+      console.log("Customer Found", result.data)
+      setFilteredCustomer([result.data])
+    } catch (error) {
+      console.log(error)
+      alert("Customer Not Found")
     }
   }
   return (
@@ -64,6 +91,11 @@ const ListCustomer = () => {
       style={{ maxWidth: "1400px" }}
     >
       <h2>Danh sách Tài Khoản ({customers.length})</h2>
+      <Search
+        search={search}
+        setSearch={setSearch}
+        onSearch={handleSearch}
+      ></Search>
       <div className="inner-wrap-display-customers">
         <table className="table table-bordered align-middle text-center">
           <thead>
@@ -78,8 +110,8 @@ const ListCustomer = () => {
             </tr>
           </thead>
           <tbody>
-            {customers.length > 0
-              ? customers.map((customer, index) => {
+            {filteredCustomer.length > 0
+              ? filteredCustomer.map((customer, index) => {
                   return (
                     <tr key={customer.id}>
                       <td>
